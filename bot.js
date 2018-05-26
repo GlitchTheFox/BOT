@@ -188,7 +188,7 @@ if (message.author.username === 'Trap-Bot'){}else{
   };
 
   if (command === '!uptime'){
-    message.channel.send("**" + ((client.uptime / 10) / 60) + "** mins")
+    message.channel.send("**" + ((client.uptime / 1000) / 60) + "** mins")
   }
 
 //A coin flip command.
