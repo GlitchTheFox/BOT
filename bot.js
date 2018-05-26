@@ -188,8 +188,8 @@ if (message.author.username === 'Trap-Bot'){}else{
   };
 
   if (command === '!uptime'){
-    let uptimes === (client.uptime / 1000);
-    let uptimem === (uptimes / 60);
+    let uptimes = (client.uptime / 1000);
+    let uptimem = (uptimes / 60);
 
     if (uptimem < 0){
       message.channel.send("**" + (Math.floor(uptimes)) + "** sec/s!")
