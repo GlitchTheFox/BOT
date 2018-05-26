@@ -1,6 +1,5 @@
 var Discord = require('discord.js');
 var client = new Discord.Client();
-var fs = require('file-system');
 var util = require('util');
 const Enmap = require('enmap');
 const EnmapLevel = require('enmap-level');
