@@ -1,10 +1,17 @@
 var Discord = require('discord.js');
+var commando = require('discord.js-commando');
 var client = new Discord.Client();
+var fs = require('file-system');
+var util = require('util');
+const Enmap = require('enmap');
+const EnmapLevel = require('enmap-level');
+const tableSource = new EnmapLevel({name: "RPchar"});
+const RPchar = new Enmap({provider: tableSource});
+client.RPchar = new Enmap({name: "RPchar", persistent: true});
 var ownerID = '186141159935049728'
 var trapID = '402741432739299330'
-var util = require('util');
-
 //Set-up.
+
 
 //Bot logs in and logs it to console.
 client.login('NDAyNzQxNDMyNzM5Mjk5MzMw.DT9Jxw.OuVo-Xg9bWyuQphRrf7hFKMi-Ts');
