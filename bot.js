@@ -13,7 +13,7 @@ client.RPchar = new Enmap({name: "RPchar", persistent: true});
 //Set-up.
 
 //Bot logs in and logs it to console.
-client.login(process.env.'NDAyNzQxNDMyNzM5Mjk5MzMw.DT9Jxw.OuVo-Xg9bWyuQphRrf7hFKMi-Ts');
+client.login(process.env.BOT_TOKEN);
 
 client.on('ready', () => {
   client.user.setActivity('Help me, I\'m trapped!')
