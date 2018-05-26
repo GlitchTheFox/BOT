@@ -190,10 +190,34 @@ if (message.author.username === 'Trap-Bot'){}else{
   if (command === '!uptime'){
     let uptimes = (client.uptime / 1000);
     let uptimem = (uptimes / 60);
+    let uptimeh = (uptimem / 60);
+    let uptimed = (uptimeh / 24);
     if (uptimem <= 1){
       message.channel.send("**" + (Math.floor(uptimes)) + "** sec/s!")
+    }else if (uptimeh <= 1){
+      if (uptimem > 1){
+        //If uptimem = 2, then loop once.
+        for (i = uptimem; i > 1; i--){
+          uptimes = uptimes - 60
+        }
+      };
+      message.channel.send("**" + (Math.floor(uptimem)) + "** min/s and **" + (Math.floor(uptimes)) + "** sec/s!")
+    }else if (uptimed <= 1){
+      if (uptimeh > 1){
+        //If uptimem = 2, then loop once.
+        for (i = uptimeh; i > 1; i--){
+          uptimem = uptimem - 60
+        }
+      };
+      message.channel.send("**" + (Math.floor(uptimeh)) + "** hr/s and **" + + "** min/s!")
     }else{
-      message.channel.send("**" + (Math.floor(uptimem)) + "** min/s!")
+      if (uptimed > 1){
+        //If uptimem = 2, then loop once.
+        for (i = uptimed; i > 1; i--){
+          uptimeh = uptimeh - 24
+        }
+      };
+      message.channel.send("**" + (Math.floor(uptimed)) + "** day/s and **" +  + "** hr/s!")
     }
   }
 
