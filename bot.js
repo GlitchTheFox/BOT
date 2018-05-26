@@ -452,4 +452,11 @@ if (message.author.username === 'Trap-Bot'){}else{
         //};
 };
 
+<<<<<<< HEAD
+=======
+
+
+
+
+>>>>>>> 92607e95ca163cd85474a3ee3654af35242ac9e3
 }});
