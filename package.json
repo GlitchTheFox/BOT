@@ -9,7 +9,7 @@
     "discord.js": "^11.3.2",
     "discord.js-commando": "^0.9.0",
     "enmap": "^2.1.0",
-    "enmap-level": "^2.0.2",
+    "enmap-level": "^2.1.0",
     "enmap-rethink": "^2.0.1",
     "file-system": "^2.2.2",
     "winston": "^2.4.1"
