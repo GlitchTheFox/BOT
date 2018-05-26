@@ -1,5 +1,4 @@
 var Discord = require('discord.js');
-var commando = require('discord.js-commando');
 var client = new Discord.Client();
 var fs = require('file-system');
 var util = require('util');
