@@ -1,11 +1,8 @@
 var Discord = require('discord.js');
 var client = new Discord.Client();
-
 var fs = require('file-system');
 var ownerID = '186141159935049728'
 var trapID = '402741432739299330'
-
-
 var util = require('util');
 const Enmap = require('enmap');
 const EnmapLevel = require('enmap-level');
@@ -49,15 +46,6 @@ client.on('message', message => {
     //NOTES: (For RP character command.)
     let charname = (args[0]);
     let chardesc = (args.slice(1)).join(' ');
-
-
-    //NOTES: (For Rolling multiple Dice.)
-    let diceRoll = (args[0]);
-    let diceAmount = (args.slice(1)[0]);
-    let diceMod = Number(args.slice(2)[0]);
-
-//NOTES: ENMAP IS NOT REMEMBERING INPUT FOR SOME REASON.
-
 
 
     //NOTES: (For Rolling multiple Dice.)
