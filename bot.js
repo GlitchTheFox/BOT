@@ -209,7 +209,7 @@ if (message.author.username === 'Trap-Bot'){}else{
           uptimem = uptimem - 60
         }
       };
-      message.channel.send("**" + (Math.floor(uptimeh)) + "** hr/s and **" + + "** min/s!")
+      message.channel.send("**" + (Math.floor(uptimeh)) + "** hr/s and **" + (Math.floor(uptimem)) + "** min/s!")
     }else{
       if (uptimed > 1){
         //If uptimem = 2, then loop once.
@@ -217,7 +217,7 @@ if (message.author.username === 'Trap-Bot'){}else{
           uptimeh = uptimeh - 24
         }
       };
-      message.channel.send("**" + (Math.floor(uptimed)) + "** day/s and **" +  + "** hr/s!")
+      message.channel.send("**" + (Math.floor(uptimed)) + "** day/s and **" + (Math.floor(uptimeh)) + "** hr/s!")
     }
   }
 
