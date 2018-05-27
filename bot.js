@@ -108,6 +108,15 @@ if (message.author.username === 'Trap-Bot'){}else{
 
 //A dice roll command. !roll 20 2
 	if (command === '!roll') {
+    if (diceRoll.indexOf('d') > -1){
+      diceMod = diceAmount;
+      let i = diceRoll.split('d');
+      diceRoll = i[1];
+      diceAmount = i[0];
+      diceRoll = parseInt(diceRoll);
+      diceAmount = parseInt(diceAmount);
+      diceMod = parseInt(diceMod);
+    };
     if (isNaN(diceRoll) || diceRoll < 1 || diceRoll > 1000) {
       message.channel.send('Sorry, that\'s not a number!')
     }else if (diceAmount === undefined){
