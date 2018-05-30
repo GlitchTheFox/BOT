@@ -1,2 +1,2 @@
-node D:\BOT\bot.js
+node bot.js
 pause
