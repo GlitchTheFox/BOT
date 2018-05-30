@@ -1,8 +1,8 @@
 var Discord = require('discord.js');
 var client = new Discord.Client();
 var fs = require('file-system');
-var ownerID = '186141159935049728'
-var trapID = '402741432739299330'
+var ownerID = process.env.ownerID
+var trapID = process.env.trapID
 var util = require('util');
 const Enmap = require('enmap');
 const EnmapLevel = require('enmap-level');
@@ -20,7 +20,8 @@ var trapID = '402741432739299330'
 
 
 //Bot logs in and logs it to console.
-client.login("you're a fucktard, my dude");
+client.login(process.env.BOT_TOKEN);
+//Don't disobey bot security my dudes. No matter how troublesome.
 
 client.on('ready', () => {
   client.user.setActivity('with traps');
