@@ -20,7 +20,7 @@ var trapID = '402741432739299330'
 
 
 //Bot logs in and logs it to console.
-client.login('NDAyNzQxNDMyNzM5Mjk5MzMw.DT9Jxw.OuVo-Xg9bWyuQphRrf7hFKMi-Ts');
+client.login("you're a fucktard, my dude");
 
 client.on('ready', () => {
   client.user.setActivity('with traps');
