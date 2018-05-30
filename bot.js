@@ -23,7 +23,7 @@ var trapID = '402741432739299330'
 client.login('NDAyNzQxNDMyNzM5Mjk5MzMw.DT9Jxw.OuVo-Xg9bWyuQphRrf7hFKMi-Ts');
 
 client.on('ready', () => {
-  client.user.setActivity('Help me, I\'m trapped!')
+  client.user.setActivity('with traps');
   console.log(`${client.user.username} shall proceed...`);
 });
 
@@ -109,7 +109,10 @@ if (message.author.username === 'Trap-Bot'){}else{
 //A dice roll command. !roll 20 2
 	if (command === '!roll') {
     if (diceRoll.indexOf('d') > -1){
-      diceMod = diceAmount;
+      if(diceRoll.indexOf('+') > -1){
+        let x = diceRoll.split('+');
+        diceMod = x[1];
+      }else{diceMod = diceAmount};
       let i = diceRoll.split('d');
       diceRoll = i[1];
       diceAmount = i[0];
