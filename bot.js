@@ -13,10 +13,6 @@ client.RPchar = new Enmap({name: "RPchar", persistent: true});
 //Set-up.
 
 
-var ownerID = '186141159935049728'
-var trapID = '402741432739299330'
-//Set-up.
-
 
 
 //Bot logs in and logs it to console.
@@ -215,7 +211,7 @@ if (message.author.username === 'Trap-Bot'){}else{
         }
       };
       message.channel.send("**" + (Math.floor(uptimem)) + "** min/s and **" + (Math.floor(uptimes)) + "** sec/s!")
-    }else if (uptimed <= 1){
+    }else if (uptimed < 1){
       if (uptimeh > 1){
         //If uptimem = 2, then loop once.
         for (i = uptimeh; i > 1; i--){
@@ -345,10 +341,6 @@ if (message.author.username === 'Trap-Bot'){}else{
         message.channel.send(message.guild.iconURL);
       };
 
-//Sends the invite link.
-      if (command === '!invite'){
-        message.channel.send('Invite me to your server. Please~ \n' + "https://discordapp.com/oauth2/authorize?client_id=402741432739299330&permissions=3656768&scope=bot")
-      };
 
       if (command === "!tail"){
         message.channel.send("**" + user + "'s** tail waves back and forth!", {files:["./gif/wag_" + (Math.floor((Math.random() * 5) + 1)) + ".gif"]})
