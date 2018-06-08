@@ -219,7 +219,7 @@ if (message.author.username === 'Trap-Bot'){}else{
         }
       };
       message.channel.send("**" + (Math.floor(uptimeh)) + "** hr/s and **" + (Math.floor(uptimem)) + "** min/s!")
-    }else{
+    }else if (uptimeh > 24){
       if (uptimed > 1){
         //If uptimem = 2, then loop once.
         for (i = uptimed; i > 1; i--){
