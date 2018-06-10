@@ -121,7 +121,7 @@ if (message.author.username === 'Trap-Bot'){}else{
       message.channel.send('Sorry, that\'s not a number!')
     }else if (diceAmount === undefined){
       message.channel.send('**' + user + '** rolled a **' + (Math.floor((Math.random() * diceRoll) + 1)) + '**' + ' out of **' + diceRoll + '**!');
-    }else if (diceAmount > 10){
+    }else if (diceAmount > 20){
       message.channel.send("Sorry, that's too many dice!")
     }else if (diceAmount >= 1){
         let rolling1 = ('**' + user + '** rolled a **');
