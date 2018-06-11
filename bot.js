@@ -383,8 +383,8 @@ if (message.author.username === 'Trap-Bot'){}else{
         let targetString = (util.inspect(targetCollection));
         let targetArgs = (targetString.split(','));
         let targetArgs2 = targetArgs[1];
-        let targetArgs3 = ((util.inspect(targetArgs2)).split(' '));
-        let targetArgs4 = targetArgs3[5];
+        let targetArgs3 = ((util.inspect(targetArgs2)).split("'"));
+        let targetArgs4 = targetArgs3[2];
         let targetUser = (targetArgs4.replace(/\\|'/g, ''));
 
         //Actual emote commands.
