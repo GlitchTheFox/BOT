@@ -468,14 +468,26 @@ if (message.author.username === 'Trap-Bot'){}else{
         };
         if (command === "!hug"){
           if(targetUser === trapUser){
-            message.channel.send("**" + user + "** hugs me! Yay!", {files:["./gif/hug_" + (Math.floor((Math.random() * 8) + 1)) + ".gif"]})
+            message.channel.send("**" + user + "** hugs me! Yay!", {files:["./gif/hug_" + (Math.floor((Math.random() * 9) + 1)) + ".gif"]})
           } else if (targetUser === user){
             message.channel.send("If you're that lonely, I'll give you a hug~", {files:["./gif/felix/felix_wag.gif"]})
           } else {
-            message.channel.send("**" + user + "** hugs **" + targetUser + "!**", {files:["./gif/hug_" + (Math.floor((Math.random() * 8) + 1)) + ".gif"]})
+            message.channel.send("**" + user + "** hugs **" + targetUser + "!**", {files:["./gif/hug_" + (Math.floor((Math.random() * 9) + 1)) + ".gif"]})
           }
         };
 
+        if (command === "!sex"){
+          if(targetUser === trapUser){
+            message.channel.send("**Wh-what...?!**", {files:["./gif/tsun_6.gif"]})
+          } else if (targetUser === user){
+            message.channel.send("Is it incest or masturbation?", {files:["./gif/m_1.gif"]})
+          }else if(targetUser === ownerUser){
+            message.channel.send("You'd better be prepared for some... stuff.", {files:["./gif/murder_1.gif"]})
+          } else {
+            message.channel.send("**" + user + "** drags **" + targetUser + "** away for some... stuff...", {files:["./gif/stuff_" + (Math.floor((Math.random() * 9) + 1)) + ".gif"]})
+          }
+        };
+	      
         //if (command === ""){
           //if(targetUser === trapUser){
             //message.channel.send("", {files:[]})
