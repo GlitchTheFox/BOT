@@ -1,8 +1,8 @@
 var Discord = require('discord.js');
 var client = new Discord.Client();
 var fs = require('file-system');
-var ownerID = '186141159935049728'
-var trapID = '402741432739299330'
+var ownerID = process.env.ownerID
+var trapID = process.env.trapID
 var util = require('util');
 const Enmap = require('enmap');
 const EnmapLevel = require('enmap-level');
@@ -13,14 +13,11 @@ client.RPchar = new Enmap({name: "RPchar", persistent: true});
 //Set-up.
 
 
-var ownerID = '186141159935049728'
-var trapID = '402741432739299330'
-//Set-up.
-
 
 
 //Bot logs in and logs it to console.
-client.login('NDAyNzQxNDMyNzM5Mjk5MzMw.DT9Jxw.OuVo-Xg9bWyuQphRrf7hFKMi-Ts');
+client.login(process.env.BOT_TOKEN);
+//Don't disobey bot security my dudes. No matter how troublesome.
 
 client.on('ready', () => {
   client.user.setActivity('with traps');
@@ -124,7 +121,7 @@ if (message.author.username === 'Trap-Bot'){}else{
       message.channel.send('Sorry, that\'s not a number!')
     }else if (diceAmount === undefined){
       message.channel.send('**' + user + '** rolled a **' + (Math.floor((Math.random() * diceRoll) + 1)) + '**' + ' out of **' + diceRoll + '**!');
-    }else if (diceAmount > 10){
+    }else if (diceAmount > 20){
       message.channel.send("Sorry, that's too many dice!")
     }else if (diceAmount >= 1){
         let rolling1 = ('**' + user + '** rolled a **');
@@ -214,7 +211,7 @@ if (message.author.username === 'Trap-Bot'){}else{
         }
       };
       message.channel.send("**" + (Math.floor(uptimem)) + "** min/s and **" + (Math.floor(uptimes)) + "** sec/s!")
-    }else if (uptimed <= 1){
+    }else if (uptimed < 1){
       if (uptimeh > 1){
         //If uptimem = 2, then loop once.
         for (i = uptimeh; i > 1; i--){
@@ -222,7 +219,7 @@ if (message.author.username === 'Trap-Bot'){}else{
         }
       };
       message.channel.send("**" + (Math.floor(uptimeh)) + "** hr/s and **" + (Math.floor(uptimem)) + "** min/s!")
-    }else{
+    }else if (uptimeh > 24){
       if (uptimed > 1){
         //If uptimem = 2, then loop once.
         for (i = uptimed; i > 1; i--){
@@ -344,10 +341,6 @@ if (message.author.username === 'Trap-Bot'){}else{
         message.channel.send(message.guild.iconURL);
       };
 
-//Sends the invite link.
-      if (command === '!invite'){
-        message.channel.send('Invite me to your server. Please~ \n' + "https://discordapp.com/oauth2/authorize?client_id=402741432739299330&permissions=3656768&scope=bot")
-      };
 
       if (command === "!tail"){
         message.channel.send("**" + user + "'s** tail waves back and forth!", {files:["./gif/wag_" + (Math.floor((Math.random() * 5) + 1)) + ".gif"]})
@@ -390,8 +383,8 @@ if (message.author.username === 'Trap-Bot'){}else{
         let targetString = (util.inspect(targetCollection));
         let targetArgs = (targetString.split(','));
         let targetArgs2 = targetArgs[1];
-        let targetArgs3 = ((util.inspect(targetArgs2)).split(' '));
-        let targetArgs4 = targetArgs3[5];
+        let targetArgs3 = ((util.inspect(targetArgs2)).split("'"));
+        let targetArgs4 = targetArgs3[2];
         let targetUser = (targetArgs4.replace(/\\|'/g, ''));
 
         //Actual emote commands.
@@ -475,14 +468,26 @@ if (message.author.username === 'Trap-Bot'){}else{
         };
         if (command === "!hug"){
           if(targetUser === trapUser){
-            message.channel.send("**" + user + "** hugs me! Yay!", {files:["./gif/hug_" + (Math.floor((Math.random() * 8) + 1)) + ".gif"]})
+            message.channel.send("**" + user + "** hugs me! Yay!", {files:["./gif/hug_" + (Math.floor((Math.random() * 9) + 1)) + ".gif"]})
           } else if (targetUser === user){
             message.channel.send("If you're that lonely, I'll give you a hug~", {files:["./gif/felix/felix_wag.gif"]})
           } else {
-            message.channel.send("**" + user + "** hugs **" + targetUser + "!**", {files:["./gif/hug_" + (Math.floor((Math.random() * 8) + 1)) + ".gif"]})
+            message.channel.send("**" + user + "** hugs **" + targetUser + "!**", {files:["./gif/hug_" + (Math.floor((Math.random() * 9) + 1)) + ".gif"]})
           }
         };
 
+        if (command === "!sex"){
+          if(targetUser === trapUser){
+            message.channel.send("**Wh-what...?!**", {files:["./gif/tsun_6.gif"]})
+          } else if (targetUser === user){
+            message.channel.send("Is it incest or masturbation?", {files:["./gif/m_1.gif"]})
+          }else if(targetUser === ownerUser){
+            message.channel.send("You'd better be prepared for some... stuff.", {files:["./gif/murder_1.gif"]})
+          } else {
+            message.channel.send("**" + user + "** drags **" + targetUser + "** away for some... stuff...", {files:["./gif/stuff_" + (Math.floor((Math.random() * 9) + 1)) + ".gif"]})
+          }
+        };
+	      
         //if (command === ""){
           //if(targetUser === trapUser){
             //message.channel.send("", {files:[]})
