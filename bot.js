@@ -240,40 +240,14 @@ if (message.author.username === 'Trap-Bot'){}else{
     }
   };
 
-//Sends the author an embed of all the commands.
-	if (command === '!help'){
-    let embed = new Discord.RichEmbed()
-	    .setAuthor('COMMAND LIST')
-	    .setDescription ('The commands for Trap-Bot.')
-	    .setColor('#FFBA8F')
-	    .addField('!whoami', 'Prints your user information.')
-	    .addField('!trap', 'Side with the **correct** side!')
-	    .addField('!not', 'Oh no the weirdo has joined us.')
-	    .addField('!roll', 'Rolls a dice of any number. Layout: !roll <sides> <number of dice> <modifier to add>')
-      .addField('!add', 'Adds two numbers together! Layout: !add <No1> <No2>')
-      .addField('!multiply', 'Times two numbers together! Layout: !multiply <No1> <No2>')
-      .addField('!subtract', 'Takes a number away from the other! Layout: !subtract <No1> <No2>')
-      .addField('!divide', 'Divides two numbers! Layout: !divide <No1> <No2>')
-	    .addField('!help', 'Displays this help text. Kind of redundant, really.')
-	    .addField('!ping', 'Sends back the bot\'s ping.')
-	    .addField('!serverinfo', 'Displays the server\'s information.')
-      .addField('!servericon', 'Sends a URL of the server\'s icon.')
-	    .addField('!avatar', 'Sends back the image of your avatar!')
-	    .addField('!echo', 'Echoes a phrase.')
-      .addField('!coinflip', 'Flips a coin.')
-      .addField('!pat', 'Pat someone, adorably!')
-      .addField('!stab', 'Kill your friends. D o   i t.')
-      .addField('!kiss', 'Kiss people... forcefully, of course.')
-      .addField('!thumbsup', 'Show others that you like their style.')
-      .addField('!pester', 'Annoy your friends!')
-      .addField('!cry', 'Burst into tears.')
-      .addField('!tail', 'Wag your tail!')
-      .addField('!slap', 'Ill behaviour will not be tolerated!')
-      .addField('!hug', 'Show your friends some love!')
+  //Sends the author the command list.
+    if (command === '!help'){
 
+      message.author.send("```\nCOMMAND LIST \n\nGeneral Commands:\n\n\t!trap \n\t\tYou believe in harsh truths.\n\t!not \n\t\tLook at you! Little rebel! \n\t!whoami \n\t\tPrints your user information. \n\t!serverinfo \n\t\tDisplays the server's information. \n\t!servericon \n\t\tSends URL of the server's icon. \n\t!echo \n\t\tEchoes a phase sent by the user. Format: !echo <text>\n\t!ping\n\t\tSends the delay in ms.\n\t!help\n\t\tYou are here.\n\t!avatar\n\t\tSends you back your avatar.\n\t!uptime\n\t\tDisplays the amount of time the bot has been up for. \n\t!artist\n\t\tPlease commission me bby.\n\nRP Commands:\n\n\t!charcreate\n\t\tCreates a character! Format: !charcreate <character name> <character description> Warning: Characters are deleted upon bot restart. \n\t\tCheck the time with !uptime. \n\t!char\n\t\tReturns character information. Format: !char <character name>\n\t!roll\n\t\tRolls a dice! Examples: !roll 1d20+3 !roll 20 1 3```");
+      message.author.send("```Math Commands:\n\n\t!coinflip\n\t\tFlips a coin.\n\t!add\n\t\tAdds two numbers together. Format: !add <n1> <n2>\n\t!subtract\n\t\tSubtracts a number from the other. Refer to !add for formatting for these commands.\n\t!multiply\n\t\tTimes two numbers together.\n\t!divide\n\t\tDivides two numbers.\n\nEmotes:\n\n\t!pat\n\t\tPat someone, adorably!\n\t!stab\n\t\tKill your friends.\n\t!kiss\n\t\tKiss your friends.\n\t!thumbsup\n\t\tA p p r o v e.\n\t!pester\n\t\tGet your friend's attention.\n\t!cry\n\t\tBurst into tears.\n\t!tail\n\t\tWag your tail. Furry.\n\t!slap\n\t\tSlap your friends.\n\t!hug\n\t\tHug your friends!\n\t!sex\n\t\tSex your friends. ( ͡° ͜ʖ ͡°)\n\n\nNew commands always being added :) Enjoy!```");
 
-	message.author.send(embed)
-	};
+    };
+
 
 
 //Sends an embed of the user's information.
@@ -347,7 +321,7 @@ if (message.author.username === 'Trap-Bot'){}else{
       };
 
       if (command === "!cry"){
-        message.channel.send("**" + user + "** begins to cry!", {files:["./gif/cry_" + (Math.floor((Math.random() * 9) + 1)) + ".gif"]})
+        message.channel.send("**" + user + "** begins to cry!", {files:["./gif/cry_" + (Math.floor((Math.random() * 8) + 1)) + ".gif"]})
       };
 
 
@@ -375,8 +349,11 @@ if (message.author.username === 'Trap-Bot'){}else{
 
 //Emotes!
       if(message.channel.type === 'dm'){}
-      else if ((message.mentions.members.first()) === undefined){}
-      else{
+      else if ((message.mentions.members.first()) === undefined){
+        if (command === "!pat" || command === "!stab" || command === "!thumbsup" || command === "!kiss" || command === "!pester" || command === "!slap" || command === "!smite" || command === "!hug" || command === "!sex"){
+          message.channel.send("Please mention somebody, first!")
+        };
+      }else{
         //Setting up username for the targetted user. FUCKING SPAGHETTI
         let mention = (message.mentions.members.first());
         let targetCollection = (message.mentions.users.filterArray(id => 'id'));
@@ -487,7 +464,7 @@ if (message.author.username === 'Trap-Bot'){}else{
             message.channel.send("**" + user + "** drags **" + targetUser + "** away for some... stuff...", {files:["./gif/stuff_" + (Math.floor((Math.random() * 9) + 1)) + ".gif"]})
           }
         };
-	      
+
         //if (command === ""){
           //if(targetUser === trapUser){
             //message.channel.send("", {files:[]})
