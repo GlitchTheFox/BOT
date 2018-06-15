@@ -1,1 +1,3 @@
-# BOT
+# Trap-Bot.
+
+Trap-Bot repository. 
