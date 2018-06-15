@@ -4,12 +4,17 @@ var fs = require('file-system');
 var ownerID = process.env.ownerID
 var trapID = process.env.trapID
 var util = require('util');
+
 const Enmap = require('enmap');
 const EnmapLevel = require('enmap-level');
+
 const tableSource = new EnmapLevel({name: "RPchar"});
 const RPchar = new Enmap({provider: tableSource});
 client.RPchar = new Enmap({name: "RPchar", persistent: true});
 
+const tableSource2 = new EnmapLevel({name:"loveCalc"});
+const loveCalc = new Enmap({provide: tableSource2});
+client.loveCalc = new Enmap({name: "loveCalc", persistent: true});
 //Set-up.
 
 
