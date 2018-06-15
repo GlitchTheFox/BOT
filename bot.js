@@ -46,9 +46,9 @@ client.on('message', message => {
 
 
     //NOTES: (For Rolling multiple Dice.)
-    let diceRoll = (args[0]);
-    let diceAmount = (args.slice(1)[0]);
-    let diceMod = Number(args.slice(2)[0]);
+    let firstArg = (args[0]);
+    let secondArg = (args.slice(1)[0]);
+    let thirdArg = Number(args.slice(2)[0]);
 
 //NOTES: ENMAP IS NOT REMEMBERING INPUT FOR SOME REASON.
 
@@ -57,8 +57,8 @@ client.on('message', message => {
 //console.log(messageArray)
 //console.log(m_mention)
 console.log("<" + user + "> " + msg);
-//console.log("1**" + diceRoll + "**");
-//console.log("2**" + diceAmount + "**");
+//console.log("1**" + firstArg + "**");
+//console.log("2**" + secondArg + "**");
 //console.log(charname + "|" + chardesc);
 //console.log(client.RPchar.get(charname));
 
@@ -105,94 +105,94 @@ if (message.author.username === 'Trap-Bot'){}else{
 
 //A dice roll command. !roll 20 2
 	if (command === '!roll') {
-    if (diceRoll.indexOf('d') > -1){
-      if(diceRoll.indexOf('+') > -1){
-        let x = diceRoll.split('+');
-        diceMod = x[1];
-      }else{diceMod = diceAmount};
-      let i = diceRoll.split('d');
-      diceRoll = i[1];
-      diceAmount = i[0];
-      diceRoll = parseInt(diceRoll);
-      diceAmount = parseInt(diceAmount);
-      diceMod = parseInt(diceMod);
+    if (firstArg.indexOf('d') > -1){
+      if(firstArg.indexOf('+') > -1){
+        let x = firstArg.split('+');
+        thirdArg = x[1];
+      }else{thirdArg = secondArg};
+      let i = firstArg.split('d');
+      firstArg = i[1];
+      secondArg = i[0];
+      firstArg = parseInt(firstArg);
+      secondArg = parseInt(secondArg);
+      thirdArg = parseInt(thirdArg);
     };
-    if (isNaN(diceRoll) || diceRoll < 1 || diceRoll > 1000) {
+    if (isNaN(firstArg) || firstArg < 1 || firstArg > 1000) {
       message.channel.send('Sorry, that\'s not a number!')
-    }else if (diceAmount === undefined){
-      message.channel.send('**' + user + '** rolled a **' + (Math.floor((Math.random() * diceRoll) + 1)) + '**' + ' out of **' + diceRoll + '**!');
-    }else if (diceAmount > 20){
+    }else if (secondArg === undefined){
+      message.channel.send('**' + user + '** rolled a **' + (Math.floor((Math.random() * firstArg) + 1)) + '**' + ' out of **' + firstArg + '**!');
+    }else if (secondArg > 20){
       message.channel.send("Sorry, that's too many dice!")
-    }else if (diceAmount >= 1){
+    }else if (secondArg >= 1){
         let rolling1 = ('**' + user + '** rolled a **');
-        let rolling2 = ("** out of **" + diceRoll + "**!");
+        let rolling2 = ("** out of **" + firstArg + "**!");
         let rollAmount = 0
 
-      for (var i = 0; i < diceAmount; i++){
-        let rolling = (Math.floor((Math.random() * diceRoll) + 1))
+      for (var i = 0; i < secondArg; i++){
+        let rolling = (Math.floor((Math.random() * firstArg) + 1))
         rollAmount += rolling;
-        if (i < (diceAmount - 1)){
+        if (i < (secondArg - 1)){
           rolling += ("**,** ")
-        }else if (i = (diceAmount - 1)){
+        }else if (i = (secondArg - 1)){
           rolling = (("**and a **") + rolling)
         };
         rolling1 += rolling;
       };
-      if (isNaN(diceMod) || diceMod < 0){
+      if (isNaN(thirdArg) || thirdArg < 0){
         message.channel.send(rolling1 + rolling2 + " (**" + rollAmount + "**)")
       }else{
         let rollMod = 0
-        rollMod = (diceMod + rollAmount);
-        message.channel.send(rolling1 + rolling2 + " (**" + rollAmount + "** + **" + diceMod + " **(Mod.) =** " + rollMod + "**)")
+        rollMod = (thirdArg + rollAmount);
+        message.channel.send(rolling1 + rolling2 + " (**" + rollAmount + "** + **" + thirdArg + " **(Mod.) =** " + rollMod + "**)")
       }
     }
     };
 
   if (command === '!add'){
-    if(isNaN(diceRoll) || isNaN(diceAmount)){
+    if(isNaN(firstArg) || isNaN(secondArg)){
       message.channel.send("Sorry, that's not a number!")
-    } else if (diceRoll > 1000000000000 || diceAmount > 1000000000000) {
+    } else if (firstArg > 1000000000000 || secondArg > 1000000000000) {
       message.channel.send("Sorry, that's too high a number!")
-    } else if (diceRoll < -1000000000000 || diceAmount < -1000000000000) {
+    } else if (firstArg < -1000000000000 || secondArg < -1000000000000) {
       message.channel.send("Sorry, that's too low a number!")
     }else{
-      message.channel.send("**" + diceRoll + " + " + diceAmount + "** equals **" + ((parseInt(diceRoll)) + (parseInt(diceAmount))) + "**!")
+      message.channel.send("**" + firstArg + " + " + secondArg + "** equals **" + ((parseInt(firstArg)) + (parseInt(secondArg))) + "**!")
     }
   };
 
   if (command === '!multiply'){
-    if(isNaN(diceRoll) || isNaN(diceAmount)){
+    if(isNaN(firstArg) || isNaN(secondArg)){
       message.channel.send("Sorry, that's not a number!")
-    } else if (diceRoll > 1000000000000 || diceAmount > 1000000000000) {
+    } else if (firstArg > 1000000000000 || secondArg > 1000000000000) {
       message.channel.send("Sorry, that's too high a number!")
-    } else if (diceRoll < -1000000000000 || diceAmount < -1000000000000) {
+    } else if (firstArg < -1000000000000 || secondArg < -1000000000000) {
       message.channel.send("Sorry, that's too low a number!")
     }else{
-      message.channel.send("**" + diceRoll + " * " + diceAmount + "** equals **" + ((parseInt(diceRoll)) * (parseInt(diceAmount))) + "**!")
+      message.channel.send("**" + firstArg + " * " + secondArg + "** equals **" + ((parseInt(firstArg)) * (parseInt(secondArg))) + "**!")
     }
   };
 
   if (command === '!subtract'){
-    if(isNaN(diceRoll) || isNaN(diceAmount)){
+    if(isNaN(firstArg) || isNaN(secondArg)){
       message.channel.send("Sorry, that's not a number!")
-    } else if (diceRoll > 1000000000000 || diceAmount > 1000000000000) {
+    } else if (firstArg > 1000000000000 || secondArg > 1000000000000) {
       message.channel.send("Sorry, that's too high a number!")
-    } else if (diceRoll < -1000000000000 || diceAmount < -1000000000000) {
+    } else if (firstArg < -1000000000000 || secondArg < -1000000000000) {
       message.channel.send("Sorry, that's too low a number!")
     }else{
-      message.channel.send("**" + diceRoll + " - " + diceAmount + "** equals **" + ((parseInt(diceRoll)) - (parseInt(diceAmount))) + "**!")
+      message.channel.send("**" + firstArg + " - " + secondArg + "** equals **" + ((parseInt(firstArg)) - (parseInt(secondArg))) + "**!")
     }
   };
 
   if (command === '!divide'){
-    if(isNaN(diceRoll) || isNaN(diceAmount)){
+    if(isNaN(firstArg) || isNaN(secondArg)){
       message.channel.send("Sorry, that's not a number!")
-    } else if (diceRoll > 1000000000000 || diceAmount > 1000000000000) {
+    } else if (firstArg > 1000000000000 || secondArg > 1000000000000) {
       message.channel.send("Sorry, that's too high a number!")
-    } else if (diceRoll < -1000000000000 || diceAmount < -1000000000000) {
+    } else if (firstArg < -1000000000000 || secondArg < -1000000000000) {
       message.channel.send("Sorry, that's too low a number!")
     }else{
-      message.channel.send("**" + diceRoll + " / " + diceAmount + "** equals **" + ((parseInt(diceRoll)) / (parseInt(diceAmount))) + "**!")
+      message.channel.send("**" + firstArg + " / " + secondArg + "** equals **" + ((parseInt(firstArg)) / (parseInt(secondArg))) + "**!")
     }
   };
 
@@ -244,7 +244,7 @@ if (message.author.username === 'Trap-Bot'){}else{
     if (command === '!help'){
 
       message.author.send("```\nCOMMAND LIST \n\nGeneral Commands:\n\n\t!trap \n\t\tYou believe in harsh truths.\n\t!not \n\t\tLook at you! Little rebel! \n\t!whoami \n\t\tPrints your user information. \n\t!serverinfo \n\t\tDisplays the server's information. \n\t!servericon \n\t\tSends URL of the server's icon. \n\t!echo \n\t\tEchoes a phase sent by the user. Format: !echo <text>\n\t!ping\n\t\tSends the delay in ms.\n\t!help\n\t\tYou are here.\n\t!avatar\n\t\tSends you back your avatar.\n\t!uptime\n\t\tDisplays the amount of time the bot has been up for. \n\t!artist\n\t\tPlease commission me bby.\n\nRP Commands:\n\n\t!charcreate\n\t\tCreates a character! Format: !charcreate <character name> <character description> Warning: Characters are deleted upon bot restart. \n\t\tCheck the time with !uptime. \n\t!char\n\t\tReturns character information. Format: !char <character name>\n\t!roll\n\t\tRolls a dice! Examples: !roll 1d20+3 !roll 20 1 3```");
-      message.author.send("```Math Commands:\n\n\t!coinflip\n\t\tFlips a coin.\n\t!add\n\t\tAdds two numbers together. Format: !add <n1> <n2>\n\t!subtract\n\t\tSubtracts a number from the other. Refer to !add for formatting for these commands.\n\t!multiply\n\t\tTimes two numbers together.\n\t!divide\n\t\tDivides two numbers.\n\nEmotes:\n\n\t!pat\n\t\tPat someone, adorably!\n\t!stab\n\t\tKill your friends.\n\t!kiss\n\t\tKiss your friends.\n\t!thumbsup\n\t\tA p p r o v e.\n\t!pester\n\t\tGet your friend's attention.\n\t!cry\n\t\tBurst into tears.\n\t!tail\n\t\tWag your tail. Furry.\n\t!slap\n\t\tSlap your friends.\n\t!hug\n\t\tHug your friends!\n\t!sex\n\t\tSex your friends. ( ͡° ͜ʖ ͡°)\n\n\nNew commands always being added :) Enjoy!```");
+      message.author.send("```Math Commands:\n\n\t!coinflip\n\t\tFlips a coin.\n\t!add\n\t\tAdds two numbers together. Format: !add <n1> <n2>\n\t!subtract\n\t\tSubtracts a number from the other. Refer to !add for formatting for these commands.\n\t!multiply\n\t\tTimes two numbers together.\n\t!divide\n\t\tDivides two numbers.\n\nEmotes:\n\n\t!pat\n\t\tPat someone, adorably!\n\t!stab\n\t\tKill your friends.\n\t!kiss\n\t\tKiss your friends.\n\t!thumbsup\n\t\tA p p r o v e.\n\t!pester\n\t\tGet your friend's attention.\n\t!cry\n\t\tBurst into tears.\n\t!tail\n\t\tWag your tail. Furry.\n\t!slap\n\t\tSlap your friends.\n\t!hug\n\t\tHug your friends!\n\t!sex\n\t\tSex your friends. ( ͡° ͜ʖ ͡°)\n\t!bite\n\t\tBite your friends.\n\t!lovecalc\n\t\tCalculate your compatibility. Format: !lovecalc <user1> <user2>\n\n\nNew commands always being added :) Enjoy!```");
 
     };
 
@@ -350,33 +350,37 @@ if (message.author.username === 'Trap-Bot'){}else{
 //Emotes!
       if(message.channel.type === 'dm'){}
       else if ((message.mentions.members.first()) === undefined){
-        if (command === "!pat" || command === "!stab" || command === "!thumbsup" || command === "!kiss" || command === "!pester" || command === "!slap" || command === "!smite" || command === "!hug" || command === "!sex"){
+        if (command === "!pat" || command === "!stab" || command === "!thumbsup" || command === "!kiss" || command === "!pester" || command === "!slap" || command === "!smite" || command === "!hug" || command === "!sex" || command === "!lovecalc" || command === "!bite"){
           message.channel.send("Please mention somebody, first!")
         };
       }else{
-        //Setting up username for the targetted user. FUCKING SPAGHETTI
-        let mention = (message.mentions.members.first());
-        let targetCollection = (message.mentions.users.filterArray(id => 'id'));
-        let targetString = (util.inspect(targetCollection));
-        let targetArgs = (targetString.split(','));
-        let targetArgs2 = targetArgs[1];
-        let targetArgs3 = ((util.inspect(targetArgs2)).split("'"));
-        let targetArgs4 = targetArgs3[2];
-        let targetUser = (targetArgs4.replace(/\\|'/g, ''));
+        //Setting up username for the targetted user.
+        if (firstArg.indexOf("@", "<", ">", /\d/g || "!") > -1){
+        let mention1 = ((util.inspect(firstArg)).split("'"))[1];
+        let targetID = (mention1.replace(/<|@|>|!/g, ''));
+        var targetUser = (client.users.get(targetID).username);
+        console.log("~~ " + targetUser);
 
-        //Actual emote commands.
-        if (command === "!pat"){
-            if (targetUser === user){
-              message.channel.send("**" + user + "** pats themself. For some reason.", {files: ["./gif/self_pat.gif"]});
-            }else{
-            message.channel.send("**" + targetUser + "** was pat by **" + user + "!**", {files: ["./gif/pat_" + (Math.floor((Math.random() * 5) + 1)) + ".gif"]});
-          };
-          if (targetUser === trapUser){
-            setTimeout(function(){
-            message.channel.send(":heart: I'll meow for you anytime, my love.");
-          }, 200);
-        }
-     };
+        if (secondArg === undefined){
+          var targetUser2 = "none";
+        }else{
+        let mention2 = (util.inspect(secondArg).split("'"))[1];
+        let targetID2 = (mention2.replace(/<|@|>|!/g, ''));
+        if ((client.users.get(targetID2)) === undefined){
+          var targetUser2 = "none";
+        }else{
+          var targetUser2 = (client.users.get(targetID2).username);
+        }};
+        console.log(targetUser2);
+      } else{
+
+        let member = message.mentions.members.first()
+        var targetUser = (member.user.username);
+        console.log(targetUser);
+        var targetUser2 = "none";
+        console.log(targetUser2);
+      };
+
 
         if (command === "!stab"){
           if (targetUser === trapUser){
@@ -465,6 +469,16 @@ if (message.author.username === 'Trap-Bot'){}else{
           }
         };
 
+        if (command === "!bite"){
+          if(targetUser === trapUser){
+            message.channel.send("**Why would you do that to me-e?**", {files:["./gif/no_bite.gif"]})
+          } else if (targetUser === user){
+            message.channel.send("**" + user + "** bites themself!", {files:["./gif/self_bite.gif"]})
+          } else {
+            message.channel.send("**" + user + "** bites **" + targetUser + "!** Owch.", {files:["./gif/bite_" + (Math.floor((Math.random() * 6) + 1)) + ".gif"]})
+          }
+        };
+
         //if (command === ""){
           //if(targetUser === trapUser){
             //message.channel.send("", {files:[]})
@@ -474,6 +488,25 @@ if (message.author.username === 'Trap-Bot'){}else{
             //message.channel.send("", {files:[]})
           //}
         //};
+
+        //LOVE CALCULATOR
+        if (command === "!lovecalc"){
+          if (targetUser2 === "none"){
+            message.channel.send("Please mention _two_ users!");
+          }else{
+            //GlitchTheFox and FelixTheTrap are 50% compatible!
+            if (client.loveCalc.has(targetUser + targetUser2) || client.loveCalc.has(targetUser2 + targetUser)){
+            var loveComp = (client.loveCalc.get(targetUser + targetUser2) || client.loveCalc.get(targetUser2 + targetUser));
+            }else{
+            var loveComp = (Math.floor((Math.random() * 100) + 1));
+            }
+            message.channel.send("**" + targetUser + "** and **" + targetUser2 + "** are **" + loveComp + "%** compatible! :heart:");
+            client.loveCalc.set(targetUser + targetUser2, loveComp, true);
+            console.log(client.loveCalc.get(targetUser + targetUser2));
+          }
+
+        };
+
 };
 
 }});
