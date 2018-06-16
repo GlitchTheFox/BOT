@@ -15,6 +15,10 @@ client.RPchar = new Enmap({name: "RPchar", persistent: true});
 const tableSource2 = new EnmapLevel({name:"loveCalc"});
 const loveCalc = new Enmap({provide: tableSource2});
 client.loveCalc = new Enmap({name: "loveCalc", persistent: true});
+
+const tableSource3 = new EnmapLevel({name: "rollLog"});
+const rollLog = new Enmap({provider: tableSource3});
+client.rollLog = new Enmap({name: "rollLog", persistent: true});
 //Set-up.
 
 
@@ -35,6 +39,7 @@ client.on('message', message => {
     var prefix = '!'
     var msg = message.content;
     var user = message.author.username;
+    var userID = message.author.id;
     var trapUser = client.user.username;
     var ownerUser = "GlitchTheFox"
 
@@ -71,179 +76,240 @@ console.log("<" + user + "> " + msg);
 //if/else command prevents Trap-Bot from executing commands it itself has written.
 if (message.author.username === 'Trap-Bot'){}else{
 
-//RP COMMANDS
-    if (command === '!charcreate'){
-      if (chardesc === ''){
-        message.channel.send("Please specify a character name and the description!")
-      } else {
-        client.RPchar.set(charname, chardesc, true);
-        message.channel.send("Character name and description logged! Use the '!char' command to see the information!")
+  if (message.channel.type === 'dm') return;
+
+
+
+
+
+  //RP COMMANDS
+      if (command === '!charcreate'){ //COMMAND USES ENMAPS. (Does not remember input after restart.)
+        if (chardesc === ''){
+          message.channel.send("Please specify a character name and the description!")
+        } else {
+          client.RPchar.set(charname, chardesc, true);
+          message.channel.send("Character name and description logged! Use the '!char' command to see the information!")
+
+
+        }
+      };
+
+      if (command === '!char'){ //COMMAND USES ENMAPS. (Does not remember input after restart.)
+        let charOutput = (client.RPchar.get(charname));
+        if (charname === undefined){
+          message.channel.send("Please specify a character name!")
+        }else if (charOutput === null){
+          message.channel.send("That character doesn't exist, sorry!")
+        } else {
+          message.channel.send("**" + charname + "**: " + charOutput);
+        }
+      };
+
+      if (command === '!artist'){
+        message.channel.send("https://glitchthef0x.deviantart.com/?rnrd=239139")
+        message.channel.send("https://www.artstation.com/lord_author")
+        message.channel.send(":^) advertising")
+      };
+
+      if (command === "!spam"){ //Owner-only command which spams the channel. For testing purposes...
+        if (message.author.id === ownerID){
+          for (var i = 0; i < 10; i++){
+            message.channel.send("This is a spam message! For testing purposes... Y'know :)")
+          }
+        } else {
+          message.channel.send("You don't have permission for that command, lol.")
+        }
       }
-    };
 
-    if (command === '!char'){
-      let charOutput = (client.RPchar.get(charname));
-      if (charname === undefined){
-        message.channel.send("Please specify a character name!")
-      }else if (charOutput === null){
-        message.channel.send("That character doesn't exist, sorry!")
-      } else {
-        message.channel.send("**" + charname + "**: " + charOutput);
-      }
-    };
 
-    if (command === '!artist'){
-      message.channel.send("https://glitchthef0x.deviantart.com/?rnrd=239139")
-      message.channel.send("https://www.artstation.com/lord_author")
-      message.channel.send(":^) advertising")
-    };
+  //traps are gay command.
+      if (command === '!trap') {
+          message.channel.send('**' + user + '** thinks traps are gay!', {files: ["./gif/trap_1.gif"]});
+      };
 
-//traps are gay command.
-    if (command === '!trap') {
-        message.channel.send('**' + user + '** thinks traps are gay!', {files: ["./gif/trap_1.gif"]});
-    };
+  //traps aren't gay command.
+      if (command === '!not') {
+          message.channel.send('**' + user + '** thinks traps aren\'t gay!', {files: ["./gif/lol.gif"]});
+      };
 
-//traps aren't gay command.
-    if (command === '!not') {
-        message.channel.send('**' + user + '** thinks traps aren\'t gay!', {files: ["./gif/lol.gif"]});
-    };
+  //A dice roll command. !roll 20 2
+  	if (command === '!roll') {
 
-//A dice roll command. !roll 20 2
-	if (command === '!roll') {
-    if (firstArg.indexOf('d') > -1){
-      if(firstArg.indexOf('+') > -1){
-        let x = firstArg.split('+');
-        thirdArg = x[1];
-      }else{thirdArg = secondArg};
-      let i = firstArg.split('d');
-      firstArg = i[1];
-      secondArg = i[0];
-      firstArg = parseInt(firstArg);
-      secondArg = parseInt(secondArg);
-      thirdArg = parseInt(thirdArg);
-    };
-    if (isNaN(firstArg) || firstArg < 1 || firstArg > 1000) {
-      message.channel.send('Sorry, that\'s not a number!')
-    }else if (secondArg === undefined){
-      message.channel.send('**' + user + '** rolled a **' + (Math.floor((Math.random() * firstArg) + 1)) + '**' + ' out of **' + firstArg + '**!');
-    }else if (secondArg > 20){
-      message.channel.send("Sorry, that's too many dice!")
-    }else if (secondArg >= 1){
-        let rolling1 = ('**' + user + '** rolled a **');
-        let rolling2 = ("** out of **" + firstArg + "**!");
-        let rollAmount = 0
+      //SETTING UP VARIATIONS FOR DICEROLL/AMOUNT/MODIFIER.
+      if (firstArg.indexOf('d') > -1){ //If the user has formatted roll as e.g. 1d20, do this.
+        if(firstArg.indexOf('+') > -1){ //If the user has added e.g. 1d20+3, do this.
+          let x = firstArg.split('+');
+          thirdArg = x[1];
+        }else{thirdArg = secondArg}; //If the user has added e.g. 1d20 3, make the modifier into the second argument.
+        let i = firstArg.split('d');
+        firstArg = i[1];
+        secondArg = i[0];
+        firstArg = parseInt(firstArg); //Make sure the arguments are integers, not strings.
+        secondArg = parseInt(secondArg);
+        thirdArg = parseInt(thirdArg);
+      }else if (firstArg.indexOf('+') > -1){ //If the user has added e.g. 20+3, do this.
+          let x = firstArg.split('+');
+          thirdArg = x[1];
+          secondArg = 1; //Setting the second argument to 1 because it was not specified.
+          firstArg = x[0];
+          firstArg = parseInt(firstArg);
+          thirdArg = parseInt(thirdArg);
+      };
 
-      for (var i = 0; i < secondArg; i++){
-        let rolling = (Math.floor((Math.random() * firstArg) + 1))
-        rollAmount += rolling;
-        if (i < (secondArg - 1)){
-          rolling += ("**,** ")
-        }else if (i = (secondArg - 1)){
-          rolling = (("**and a **") + rolling)
+
+      if (isNaN(firstArg) || firstArg < 1 || firstArg > 1000) { //If the user inputs an invalid roll, fuck them up.
+        message.channel.send('Sorry, that\'s not a number!')
+      }else if (secondArg === undefined){ //If the user isn't rolling more than one dice and has just inputted !roll 20, output this.
+        message.channel.send('**' + user + '** rolled a **' + (Math.floor((Math.random() * firstArg) + 1)) + '**' + ' out of **' + firstArg + '**!');
+      }else if (secondArg > 10){ //If the user tries to roll more than 10 dice, output this.
+        message.channel.send("Sorry, that's too many dice!")
+      }else if (secondArg >= 1){ //Ohhhh fuck. If the user does specify an amount of dice to roll, output this.
+
+          let rolling1 = ('**' + user + '** rolled a **'); //Setting up string, in order to repeat the correct amount of times.
+          let rolling2 = ("** out of **" + firstArg + "**!");
+          let rollAmount = 0
+
+        for (var i = 0; i < secondArg; i++){ //for loop which rolls the desired amount of dice, and adds on the correct string.
+          let rolling = (Math.floor((Math.random() * firstArg) + 1))
+          rollAmount += rolling; //Adds result onto final sum.
+          if (i < (secondArg - 1)){
+            rolling += ("**,** ")
+          }else if (i = (secondArg - 1)){
+            rolling = (("**and a **") + rolling)
+          };
+
+          rolling1 += rolling; //adds result and string onto the start of the first string.
         };
-        rolling1 += rolling;
-      };
-      if (isNaN(thirdArg) || thirdArg < 0){
-        message.channel.send(rolling1 + rolling2 + " (**" + rollAmount + "**)")
-      }else{
-        let rollMod = 0
-        rollMod = (thirdArg + rollAmount);
-        message.channel.send(rolling1 + rolling2 + " (**" + rollAmount + "** + **" + thirdArg + " **(Mod.) =** " + rollMod + "**)")
+
+        if (isNaN(thirdArg) || thirdArg < 0){ //If the user has not added a modifier to their roll, output this.
+          message.channel.send(rolling1 + rolling2 + " (**" + rollAmount + "**)")
+          client.rollLog.set(user, rollAmount, true);
+        }else{ //If the user has added a modifier to their roll, output this.
+          let rollMod = 0;
+          rollMod = (thirdArg + rollAmount); //Adding modifier onto final sum.
+          message.channel.send(rolling1 + rolling2 + " (**" + rollAmount + "** + **" + thirdArg + " **(Mod.) =** " + rollMod + "**)")
+          client.rollLog.set(user, rollMod, true);
+        }
+
       }
-    }
+      };
+
+
+      if (command === '!lastroll'){
+        let lastroll = client.rollLog.get(user);
+        if (lastroll === null){
+          message.channel.send("Sorry, you haven't rolled yet!")
+        } else{
+          message.channel.send("The last dice **" + user + "** rolled resulted in **" + lastroll + "!**")
+        }
+      }
+
+
+
+
+  //MATH COMMANDS
+
+    if (command === '!add'){
+      if(isNaN(firstArg) || isNaN(secondArg)){
+        message.channel.send("Sorry, that's not a number!")
+      } else if (firstArg > 1000000000000 || secondArg > 1000000000000) {
+        message.channel.send("Sorry, that's too high a number!")
+      } else if (firstArg < -1000000000000 || secondArg < -1000000000000) {
+        message.channel.send("Sorry, that's too low a number!")
+      }else{
+        message.channel.send("**" + firstArg + " + " + secondArg + "** equals **" + ((parseInt(firstArg)) + (parseInt(secondArg))) + "**!")
+      }
     };
 
-  if (command === '!add'){
-    if(isNaN(firstArg) || isNaN(secondArg)){
-      message.channel.send("Sorry, that's not a number!")
-    } else if (firstArg > 1000000000000 || secondArg > 1000000000000) {
-      message.channel.send("Sorry, that's too high a number!")
-    } else if (firstArg < -1000000000000 || secondArg < -1000000000000) {
-      message.channel.send("Sorry, that's too low a number!")
-    }else{
-      message.channel.send("**" + firstArg + " + " + secondArg + "** equals **" + ((parseInt(firstArg)) + (parseInt(secondArg))) + "**!")
-    }
-  };
+    if (command === '!multiply'){
+      if(isNaN(firstArg) || isNaN(secondArg)){
+        message.channel.send("Sorry, that's not a number!")
+      } else if (firstArg > 1000000000000 || secondArg > 1000000000000) {
+        message.channel.send("Sorry, that's too high a number!")
+      } else if (firstArg < -1000000000000 || secondArg < -1000000000000) {
+        message.channel.send("Sorry, that's too low a number!")
+      }else{
+        message.channel.send("**" + firstArg + " * " + secondArg + "** equals **" + ((parseInt(firstArg)) * (parseInt(secondArg))) + "**!")
+      }
+    };
 
-  if (command === '!multiply'){
-    if(isNaN(firstArg) || isNaN(secondArg)){
-      message.channel.send("Sorry, that's not a number!")
-    } else if (firstArg > 1000000000000 || secondArg > 1000000000000) {
-      message.channel.send("Sorry, that's too high a number!")
-    } else if (firstArg < -1000000000000 || secondArg < -1000000000000) {
-      message.channel.send("Sorry, that's too low a number!")
-    }else{
-      message.channel.send("**" + firstArg + " * " + secondArg + "** equals **" + ((parseInt(firstArg)) * (parseInt(secondArg))) + "**!")
-    }
-  };
+    if (command === '!subtract'){
+      if(isNaN(firstArg) || isNaN(secondArg)){
+        message.channel.send("Sorry, that's not a number!")
+      } else if (firstArg > 1000000000000 || secondArg > 1000000000000) {
+        message.channel.send("Sorry, that's too high a number!")
+      } else if (firstArg < -1000000000000 || secondArg < -1000000000000) {
+        message.channel.send("Sorry, that's too low a number!")
+      }else{
+        message.channel.send("**" + firstArg + " - " + secondArg + "** equals **" + ((parseInt(firstArg)) - (parseInt(secondArg))) + "**!")
+      }
+    };
 
-  if (command === '!subtract'){
-    if(isNaN(firstArg) || isNaN(secondArg)){
-      message.channel.send("Sorry, that's not a number!")
-    } else if (firstArg > 1000000000000 || secondArg > 1000000000000) {
-      message.channel.send("Sorry, that's too high a number!")
-    } else if (firstArg < -1000000000000 || secondArg < -1000000000000) {
-      message.channel.send("Sorry, that's too low a number!")
-    }else{
-      message.channel.send("**" + firstArg + " - " + secondArg + "** equals **" + ((parseInt(firstArg)) - (parseInt(secondArg))) + "**!")
-    }
-  };
+    if (command === '!divide'){
+      if(isNaN(firstArg) || isNaN(secondArg)){
+        message.channel.send("Sorry, that's not a number!")
+      } else if (firstArg > 1000000000000 || secondArg > 1000000000000) {
+        message.channel.send("Sorry, that's too high a number!")
+      } else if (firstArg < -1000000000000 || secondArg < -1000000000000) {
+        message.channel.send("Sorry, that's too low a number!")
+      }else{
+        message.channel.send("**" + firstArg + " / " + secondArg + "** equals **" + ((parseInt(firstArg)) / (parseInt(secondArg))) + "**!")
+      }
+    };
 
-  if (command === '!divide'){
-    if(isNaN(firstArg) || isNaN(secondArg)){
-      message.channel.send("Sorry, that's not a number!")
-    } else if (firstArg > 1000000000000 || secondArg > 1000000000000) {
-      message.channel.send("Sorry, that's too high a number!")
-    } else if (firstArg < -1000000000000 || secondArg < -1000000000000) {
-      message.channel.send("Sorry, that's too low a number!")
-    }else{
-      message.channel.send("**" + firstArg + " / " + secondArg + "** equals **" + ((parseInt(firstArg)) / (parseInt(secondArg))) + "**!")
-    }
-  };
 
-  if (command === '!uptime'){
-    let uptimes = (client.uptime / 1000);
-    let uptimem = (uptimes / 60);
-    let uptimeh = (uptimem / 60);
-    let uptimed = (uptimeh / 24);
-    if (uptimem <= 1){
-      message.channel.send("**" + (Math.floor(uptimes)) + "** sec/s!")
-    }else if (uptimeh <= 1){
-      if (uptimem > 1){
-        //If uptimem = 2, then loop once.
-        for (i = uptimem; i > 1; i--){
-          uptimes = uptimes - 60
-        }
-      };
-      message.channel.send("**" + (Math.floor(uptimem)) + "** min/s and **" + (Math.floor(uptimes)) + "** sec/s!")
-    }else if (uptimed < 1){
-      if (uptimeh > 1){
-        //If uptimem = 2, then loop once.
-        for (i = uptimeh; i > 1; i--){
-          uptimem = uptimem - 60
-        }
-      };
-      message.channel.send("**" + (Math.floor(uptimeh)) + "** hr/s and **" + (Math.floor(uptimem)) + "** min/s!")
-    }else if (uptimeh > 24){
-      if (uptimed > 1){
-        //If uptimem = 2, then loop once.
-        for (i = uptimed; i > 1; i--){
-          uptimeh = uptimeh - 24
-        }
-      };
-      message.channel.send("**" + (Math.floor(uptimed)) + "** day/s and **" + (Math.floor(uptimeh)) + "** hr/s!")
-    }
-  }
 
-//A coin flip command.
-  if (command === '!coinflip') {
-    let coin = (Math.floor((Math.random() * 2) + 1));
-    if (coin === 1){
-      message.channel.send('**' + user + '** flipped a coin and got **Heads!**')
-    } else {
-      message.channel.send('**' + user + '** flipped a coin and got **Tails!**')
-    }
-  };
+
+  //back to normal commands
+
+    if (command === '!uptime'){
+      let uptimes = (client.uptime / 1000);
+      let uptimem = (uptimes / 60);
+      let uptimeh = (uptimem / 60);
+      let uptimed = (uptimeh / 24);
+      if (uptimem <= 1){
+        message.channel.send("**" + (Math.floor(uptimes)) + "** sec/s!")
+      }else if (uptimeh <= 1){
+        if (uptimem > 1){
+          //If uptimem = 2, then loop once.
+          for (i = uptimem; i > 1; i--){
+            uptimes = uptimes - 60
+          }
+        };
+        message.channel.send("**" + (Math.floor(uptimem)) + "** min/s and **" + (Math.floor(uptimes)) + "** sec/s!")
+      }else if (uptimed <= 1){
+        if (uptimeh > 1){
+          //If uptimem = 2, then loop once.
+          for (i = uptimeh; i > 1; i--){
+            uptimem = uptimem - 60
+          }
+        };
+        message.channel.send("**" + (Math.floor(uptimeh)) + "** hr/s and **" + (Math.floor(uptimem)) + "** min/s!")
+      }else{
+        if (uptimed > 1){
+          //If uptimem = 2, then loop once.
+          for (i = uptimed; i > 1; i--){
+            uptimeh = uptimeh - 24
+          }
+        };
+        message.channel.send("**" + (Math.floor(uptimed)) + "** day/s and **" + (Math.floor(uptimeh)) + "** hr/s!")
+      }
+    };
+
+
+
+  //A coin flip command.
+    if (command === '!coinflip') {
+      let coin = (Math.floor((Math.random() * 2) + 1));
+      if (coin === 1){
+        message.channel.send('**' + user + '** flipped a coin and got **Heads!**')
+      } else {
+        message.channel.send('**' + user + '** flipped a coin and got **Tails!**')
+      }
+    };
+
+
+
 
   //Sends the author the command list.
     if (command === '!help'){
@@ -255,244 +321,265 @@ if (message.author.username === 'Trap-Bot'){}else{
 
 
 
-//Sends an embed of the user's information.
-    if (msg === prefix + 'whoami') {
+
+  //Sends an embed of the user's information.
+      if (msg === prefix + 'whoami') {
+            let embed = new Discord.RichEmbed()
+              .setAuthor(message.author.username)
+              .setDescription('This is your user info.')
+              .setColor('#FFBA8F')
+              .addField('Full Username', `${message.author.username}#${message.author.discriminator}`)
+              .addField('ID', message.author.id)
+              .addField('Created At', message.author.createdAt);
+
+            message.channel.send(embed);
+        };
+
+
+
+  //SIMPLE COMMANDS.
+  //Just in case anyone says what instead of who.
+        if(command === '!whatami'){
+          message.channel.send('You poor, poor creature.')
+        };
+
+        if(command === '!crashmebby'){
+          if (message.author.id === ownerID){fuck} else return;
+        };
+
+  //when I am very frustrated with the bot I ask this.
+        if (msg === 'why are you a dick'){
+          message.channel.send('because I am a failure')
+        };
+
+  //Please send help.
+        if (msg === 'are you ok'){
+          message.channel.send('01101000 01100101 01101100 01110000 00100000 01101101 01100101 00100000 01101001 00100000 01100001 01101101 00100000 01100001 00100000 01110000 01100101 01110010 01110011 01101111 01101110 00100000 01110100 01110010 01100001 01110000 01110000 01100101 01100100 00100000 01101001 01101110 00100000 01100001 00100000 01110000 01110010 01101111 01100111 01110010 01100001 01101101')
+        };
+
+  //Tells the user the bot's ping and delay.
+        if (msg === prefix + 'ping'){
+          message.channel.send('pong | ' + (Math.floor(client.ping)) + 'ms')
+        };
+
+  //Echoes the user's arguments.
+        if (command === '!echo'){
+          message.delete(1)
+          message.channel.send(args.join(' '))
+        };
+
+  //Prints the server info.
+        if (command === '!serverinfo'){
           let embed = new Discord.RichEmbed()
-            .setAuthor(message.author.username)
-            .setDescription('This is your user info.')
+            .setAuthor(message.guild.name)
+            .setDescription('The server\'s information.')
             .setColor('#FFBA8F')
-            .addField('Full Username', `${message.author.username}#${message.author.discriminator}`)
-            .addField('ID', message.author.id)
-            .addField('Created At', message.author.createdAt);
+            .addField('ID', message.guild.id)
+            .addField('Member Count', message.guild.memberCount)
+            .addField('Created at', message.guild.createdAt);
 
-          message.channel.send(embed);
-      };
-
-//Just in case anyone says what instead of who.
-      if(command === '!whatami'){
-        message.channel.send('You poor, poor creature.')
-      };
-
-      if(command === '!crashmebby'){
-        if (message.author.id === ownerID){fuck} else return;
-      };
-
-//when I am very frustrated with the bot I ask this.
-      if (msg === 'why are you a dick'){
-        message.channel.send('because I am a failure')
-      };
-
-//Please send help.
-      if (msg === 'are you ok'){
-        message.channel.send('01101000 01100101 01101100 01110000 00100000 01101101 01100101 00100000 01101001 00100000 01100001 01101101 00100000 01100001 00100000 01110000 01100101 01110010 01110011 01101111 01101110 00100000 01110100 01110010 01100001 01110000 01110000 01100101 01100100 00100000 01101001 01101110 00100000 01100001 00100000 01110000 01110010 01101111 01100111 01110010 01100001 01101101')
-      };
-
-//Tells the user the bot's ping and delay.
-      if (msg === prefix + 'ping'){
-        message.channel.send('pong | ' + (Math.floor(client.ping)) + 'ms')
-      };
-
-//Echoes the user's arguments.
-      if (command === '!echo'){
-        message.delete(1)
-        message.channel.send(args.join(' '))
-      };
-
-//Prints the server info.
-      if (command === '!serverinfo'){
-        let embed = new Discord.RichEmbed()
-          .setAuthor(message.guild.name)
-          .setDescription('The server\'s information.')
-          .setColor('#FFBA8F')
-          .addField('ID', message.guild.id)
-          .addField('Member Count', message.guild.memberCount)
-          .addField('Created at', message.guild.createdAt);
-
-          message.channel.send(embed);
-      };
-
-//Pastes the URL of the user's avatar.
-      if (command === '!avatar'){
-        message.channel.send(message.author.avatarURL);
-      };
-
-      if (command === '!servericon'){
-        message.channel.send(message.guild.iconURL);
-      };
-
-
-      if (command === "!tail"){
-        message.channel.send("**" + user + "'s** tail waves back and forth!", {files:["./gif/wag_" + (Math.floor((Math.random() * 5) + 1)) + ".gif"]})
-      };
-
-      if (command === "!cry"){
-        message.channel.send("**" + user + "** begins to cry!", {files:["./gif/cry_" + (Math.floor((Math.random() * 8) + 1)) + ".gif"]})
-      };
-
-
-
-
-
-//Random chat responses.
-      //precious trap boi
-      if (msg === 'good boy, trap-bot'){
-        if (message.author.id === ownerID){
-        message.channel.send("_happy trap noises_")
-        }
-      };
-
-      //Goodnight Trap-Bot!
-      if (msg === "goodnight, trap-bot"){
-        if (message.author.id === ownerID){
-          message.channel.send("Goodnight, creator!")
-        } else {
-          message.channel.send("Goodnight, sir!")
-        }
-      };
-
-
-
-//Emotes!
-      if(message.channel.type === 'dm'){}
-      else if ((message.mentions.members.first()) === undefined){
-        if (command === "!pat" || command === "!stab" || command === "!thumbsup" || command === "!kiss" || command === "!pester" || command === "!slap" || command === "!smite" || command === "!hug" || command === "!sex" || command === "!lovecalc" || command === "!bite"){
-          message.channel.send("Please mention somebody, first!")
-        };
-      }else{
-        //Setting up username for the targetted user.
-        if (firstArg.indexOf("@", "<", ">", /\d/g || "!") > -1){
-        let mention1 = ((util.inspect(firstArg)).split("'"))[1];
-        let targetID = (mention1.replace(/<|@|>|!/g, ''));
-        var targetUser = (client.users.get(targetID).username);
-        console.log("~~ " + targetUser);
-
-        if (secondArg === undefined){
-          var targetUser2 = "none";
-        }else{
-        let mention2 = (util.inspect(secondArg).split("'"))[1];
-        let targetID2 = (mention2.replace(/<|@|>|!/g, ''));
-        if ((client.users.get(targetID2)) === undefined){
-          var targetUser2 = "none";
-        }else{
-          var targetUser2 = (client.users.get(targetID2).username);
-        }};
-        console.log(targetUser2);
-      } else{
-
-        let member = message.mentions.members.first()
-        var targetUser = (member.user.username);
-        console.log(targetUser);
-        var targetUser2 = "none";
-        console.log(targetUser2);
-      };
-
-
-        if (command === "!stab"){
-          if (targetUser === trapUser){
-            message.channel.send("**" + trapUser + "** stabs **" + user + "**! Omae wo shindeiru.", {files:["./gif/stab_" + (Math.floor((Math.random() * 5) + 1)) + ".gif"]})
-          } else if (targetUser === user){
-            message.channel.send("**" + user + "** stabs themselves dramatically!", {files:["./gif/self_stab.gif"]})
-          }else{
-            message.channel.send("**" + user + "** stabs **" + targetUser + "**!", {files:["./gif/stab_" + (Math.floor((Math.random() * 5) + 1)) + ".gif"]});
-          };
+            message.channel.send(embed);
         };
 
-        if (command === "!thumbsup"){
-          if (targetUser === user){
-            message.author.send("Poor child, I'll give you a thumbs up!", {files:["./gif/thumb_" + (Math.floor((Math.random() * 5) + 1)) + ".gif"]})
-          }else{
-            message.channel.send("**" + user + "** gives **" + targetUser + "** a thumbs up!", {files:["./gif/thumb_" + (Math.floor((Math.random() * 5) + 1)) + ".gif"]})
+  //Pastes the URL of the user's avatar.
+        if (command === '!avatar'){
+          message.channel.send(message.author.avatarURL);
+        };
+
+        if (command === '!servericon'){
+          message.channel.send(message.guild.iconURL);
+        };
+
+        if (command === "!tail"){
+          message.channel.send("**" + user + "'s** tail waves back and forth!", {files:["./gif/wag_" + (Math.floor((Math.random() * 5) + 1)) + ".gif"]})
+        };
+
+        if (command === "!cry"){
+          message.channel.send("**" + user + "** begins to cry!", {files:["./gif/cry_" + (Math.floor((Math.random() * 8) + 1)) + ".gif"]})
+        };
+
+
+
+
+
+  //Random chat responses.
+        //precious trap boi
+        if (msg === 'good boy, trap-bot'){
+          if (message.author.id === ownerID){
+          message.channel.send("_happy trap noises_")
+          }
+        };
+
+        //Goodnight Trap-Bot!
+        if (msg === "goodnight, trap-bot"){
+          if (message.author.id === ownerID){
+            message.channel.send("Goodnight, creator!")
+          } else {
+            message.channel.send("Goodnight, sir!")
+          }
+        };
+
+
+
+  //Sets up mention-based commands.
+        if(message.channel.type === 'dm'){}
+        else if ((message.mentions.members.first()) === undefined){
+          if (command === "!pat" || command === "!stab" || command === "!thumbsup" || command === "!kiss" || command === "!pester" || command === "!slap" || command === "!smite" || command === "!hug" || command === "!sex" || command === "!lovecalc" || command === "!bite"){
+            message.channel.send("Please mention somebody, first!")
           };
-          if (targetUser === trapUser){
-            setTimeout(function(){
-              message.channel.send("Thanks!")
+        }else{
+          //Setting up username for the targetted user.
+          if (firstArg.indexOf("@", "<", ">", /\d/g || "!") > -1){
+          let mention1 = ((util.inspect(firstArg)).split("'"))[1];
+          let targetID = (mention1.replace(/<|@|>|!/g, ''));
+          var targetUser = (client.users.get(targetID).username);
+          console.log("~~ " + targetUser);
+
+          if (secondArg === undefined){
+            var targetUser2 = "none";
+          }else{
+          let mention2 = (util.inspect(secondArg).split("'"))[1];
+          let targetID2 = (mention2.replace(/<|@|>|!/g, ''));
+          if ((client.users.get(targetID2)) === undefined){
+            var targetUser2 = "none";
+          }else{
+            var targetUser2 = (client.users.get(targetID2).username);
+          }};
+          console.log(targetUser2);
+        } else{
+
+          let member = message.mentions.members.first()
+          var targetUser = (member.user.username);
+          console.log(targetUser);
+          var targetUser2 = "none";
+          console.log(targetUser2);
+        };
+
+
+
+
+          //Actual emote commands.
+          if (command === "!pat"){
+              if (targetUser === user){
+                message.channel.send("**" + user + "** pats themself. For some reason.", {files: ["./gif/self_pat.gif"]});
+              }else{
+              message.channel.send("**" + targetUser + "** was pat by **" + user + "!**", {files: ["./gif/pat_" + (Math.floor((Math.random() * 5) + 1)) + ".gif"]});
+            };
+            if (targetUser === trapUser){
+              setTimeout(function(){
+              message.channel.send(":heart: I'll meow for you anytime, my love.");
             }, 200);
           }
-        };
+       };
 
-        if (command === "!kiss"){
-          if (targetUser === trapUser){
-              message.channel.send("**No!**", {files:["./gif/tsun_1.gif"]});
+          if (command === "!stab"){
+            if (targetUser === trapUser){
+              message.channel.send("**" + trapUser + "** stabs **" + user + "**! Omae wo shindeiru.", {files:["./gif/stab_" + (Math.floor((Math.random() * 5) + 1)) + ".gif"]})
             } else if (targetUser === user){
-            message.channel.send("Loneliness only goes so far, man.")
-          }else{
-            message.channel.send("**" + user + "** grabs **" + targetUser + "** and kisses them!", {files:["./gif/kiss_" + (Math.floor((Math.random() * 6) + 1)) + ".gif"]})
-          }
-        };
+              message.channel.send("**" + user + "** stabs themselves dramatically!", {files:["./gif/self_stab.gif"]})
+            }else{
+              message.channel.send("**" + user + "** stabs **" + targetUser + "**!", {files:["./gif/stab_" + (Math.floor((Math.random() * 5) + 1)) + ".gif"]});
+            };
+          };
 
-        if (command === "!pester"){
-          if(targetUser === trapUser){
-            message.channel.send("I'm listening, **" + user + "!**", {files:["./gif/felix/felix_ears.gif"]});
-          } else if (targetUser === user){
-            message.channel.send("You can't pester yourself!");
-          } else {
-            message.channel.send("**" + user + "** starts to pester **" + targetUser + "!**", {files:["./gif/annoy_" + (Math.floor((Math.random() * 6) + 1)) + ".gif"]})
-          }
-        };
-
-        if (command === "!slap"){
-          if(targetUser === trapUser){
-            if (message.author.id === ownerID) {
-              message.channel.send("**" + user + "** slaps **Me!** OW!", {files:["./gif/slap_" + (Math.floor((Math.random() * 6) + 1)) + ".gif"]})
-            } else {
-              message.channel.send("Why would you do that to me, **" + user + "**?", {files:["./gif/felix/felix_cry.gif"]})
+          if (command === "!thumbsup"){
+            if (targetUser === user){
+              message.author.send("Poor child, I'll give you a thumbs up!", {files:["./gif/thumb_" + (Math.floor((Math.random() * 5) + 1)) + ".gif"]})
+            }else{
+              message.channel.send("**" + user + "** gives **" + targetUser + "** a thumbs up!", {files:["./gif/thumb_" + (Math.floor((Math.random() * 5) + 1)) + ".gif"]})
+            };
+            if (targetUser === trapUser){
+              setTimeout(function(){
+                message.channel.send("Thanks!")
+              }, 200);
             }
-          } else if (targetUser === user){
-            message.channel.send("Why are you hitting yourself?", {files:["./gif/felix/felix_cool.gif"]})
-          } else {
-            message.channel.send("**" + user + "** slapped **" + targetUser + "!**", {files:["./gif/slap_" + (Math.floor((Math.random() * 6) + 1)) + ".gif"]})
-          }
-        };
-        if (command === "!smite"){
-          if(message.author.id === ownerID){
+          };
+
+          if (command === "!kiss"){
+            if (targetUser === trapUser){
+                message.channel.send("**No!**", {files:["./gif/tsun_1.gif"]});
+              } else if (targetUser === user){
+              message.channel.send("Loneliness only goes so far, man.")
+            }else{
+              message.channel.send("**" + user + "** grabs **" + targetUser + "** and kisses them!", {files:["./gif/kiss_" + (Math.floor((Math.random() * 6) + 1)) + ".gif"]})
+            }
+          };
+
+          if (command === "!pester"){
             if(targetUser === trapUser){
-              message.channel.send("MERCY! *Dies.*", {files:["./gif/smite_" + (Math.floor((Math.random() * 3) + 1)) + ".gif"]})
+              message.channel.send("I'm listening, **" + user + "!**", {files:["./gif/felix/felix_ears.gif"]});
+            } else if (targetUser === user){
+              message.channel.send("You can't pester yourself!");
             } else {
-              message.channel.send("**" + ownerUser + "** strikes **" + targetUser + "** down with lightning!", {files:["./gif/smite_" + (Math.floor((Math.random() * 3) + 1)) + ".gif"]})
+              message.channel.send("**" + user + "** starts to pester **" + targetUser + "!**", {files:["./gif/annoy_" + (Math.floor((Math.random() * 6) + 1)) + ".gif"]})
             }
-          }
-        };
-        if (command === "!hug"){
-          if(targetUser === trapUser){
-            message.channel.send("**" + user + "** hugs me! Yay!", {files:["./gif/hug_" + (Math.floor((Math.random() * 9) + 1)) + ".gif"]})
-          } else if (targetUser === user){
-            message.channel.send("If you're that lonely, I'll give you a hug~", {files:["./gif/felix/felix_wag.gif"]})
-          } else {
-            message.channel.send("**" + user + "** hugs **" + targetUser + "!**", {files:["./gif/hug_" + (Math.floor((Math.random() * 9) + 1)) + ".gif"]})
-          }
-        };
+          };
 
-        if (command === "!sex"){
-          if(targetUser === trapUser){
-            message.channel.send("**Wh-what...?!**", {files:["./gif/tsun_6.gif"]})
-          } else if (targetUser === user){
-            message.channel.send("Is it incest or masturbation?", {files:["./gif/m_1.gif"]})
-          }else if(targetUser === ownerUser){
-            message.channel.send("You'd better be prepared for some... stuff.", {files:["./gif/murder_1.gif"]})
-          } else {
-            message.channel.send("**" + user + "** drags **" + targetUser + "** away for some... stuff...", {files:["./gif/stuff_" + (Math.floor((Math.random() * 9) + 1)) + ".gif"]})
-          }
-        };
+          if (command === "!slap"){
+            if(targetUser === trapUser){
+              if (message.author.id === ownerID) {
+                message.channel.send("**" + user + "** slaps **Me!** OW!", {files:["./gif/slap_" + (Math.floor((Math.random() * 6) + 1)) + ".gif"]})
+              } else {
+                message.channel.send("Why would you do that to me, **" + user + "**?", {files:["./gif/felix/felix_cry.gif"]})
+              }
+            } else if (targetUser === user){
+              message.channel.send("Why are you hitting yourself?", {files:["./gif/felix/felix_cool.gif"]})
+            } else {
+              message.channel.send("**" + user + "** slapped **" + targetUser + "!**", {files:["./gif/slap_" + (Math.floor((Math.random() * 6) + 1)) + ".gif"]})
+            }
+          };
 
-        if (command === "!bite"){
-          if(targetUser === trapUser){
-            message.channel.send("**Why would you do that to me-e?**", {files:["./gif/no_bite.gif"]})
-          } else if (targetUser === user){
-            message.channel.send("**" + user + "** bites themself!", {files:["./gif/self_bite.gif"]})
-          } else {
-            message.channel.send("**" + user + "** bites **" + targetUser + "!** Owch.", {files:["./gif/bite_" + (Math.floor((Math.random() * 6) + 1)) + ".gif"]})
-          }
-        };
+          if (command === "!smite"){
+            if(message.author.id === ownerID){
+              if(targetUser === trapUser){
+                message.channel.send("MERCY! *Dies.*", {files:["./gif/smite_" + (Math.floor((Math.random() * 3) + 1)) + ".gif"]})
+              } else {
+                message.channel.send("**" + ownerUser + "** strikes **" + targetUser + "** down with lightning!", {files:["./gif/smite_" + (Math.floor((Math.random() * 3) + 1)) + ".gif"]})
+              }
+            }
+          };
 
-        //if (command === ""){
-          //if(targetUser === trapUser){
-            //message.channel.send("", {files:[]})
-          //} else if (targetUser === user){
-            //message.channel.send("", {files:[]})
-          //} else {
-            //message.channel.send("", {files:[]})
-          //}
-        //};
+          if (command === "!hug"){
+            if(targetUser === trapUser){
+              message.channel.send("**" + user + "** hugs me! Yay!", {files:["./gif/hug_" + (Math.floor((Math.random() * 9) + 1)) + ".gif"]})
+            } else if (targetUser === user){
+              message.channel.send("If you're that lonely, I'll give you a hug~", {files:["./gif/felix/felix_wag.gif"]})
+            } else {
+              message.channel.send("**" + user + "** hugs **" + targetUser + "!**", {files:["./gif/hug_" + (Math.floor((Math.random() * 9) + 1)) + ".gif"]})
+            }
+          };
+
+          if (command === "!sex"){
+            if(targetUser === trapUser){
+              message.channel.send("**Wh-what...?!**", {files:["./gif/tsun_6.gif"]})
+            } else if (targetUser === user){
+              message.channel.send("Is it incest or masturbation?", {files:["./gif/m_1.gif"]})
+            }else if(targetUser === ownerUser){
+              message.channel.send("You'd better be prepared for some... stuff.", {files:["./gif/murder_1.gif"]})
+            } else {
+              message.channel.send("**" + user + "** drags **" + targetUser + "** away for some... stuff...", {files:["./gif/stuff_" + (Math.floor((Math.random() * 9) + 1)) + ".gif"]})
+            }
+          };
+
+          if (command === "!bite"){
+            if(targetUser === trapUser){
+              message.channel.send("**Why would you do that to me-e?**", {files:["./gif/no_bite.gif"]})
+            } else if (targetUser === user){
+              message.channel.send("**" + user + "** bites themself!", {files:["./gif/self_bite.gif"]})
+            } else {
+              message.channel.send("**" + user + "** bites **" + targetUser + "!** Owch.", {files:["./gif/bite_" + (Math.floor((Math.random() * 6) + 1)) + ".gif"]})
+            }
+          };
+
+          //if (command === ""){
+            //if(targetUser === trapUser){
+              //message.channel.send("", {files:[]})
+            //} else if (targetUser === user){
+              //message.channel.send("", {files:[]})
+            //} else {
+              //message.channel.send("", {files:[]})
+            //}
+          //};
 
         //LOVE CALCULATOR
         if (command === "!lovecalc"){
@@ -511,7 +598,6 @@ if (message.author.username === 'Trap-Bot'){}else{
           }
 
         };
+  };
 
-};
-
-}});
+  }});
