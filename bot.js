@@ -567,7 +567,7 @@ if (message.author.username === 'Trap-Bot'){}else{
             } else if (targetUser === user){
               message.channel.send("**" + user + "** bites themself!", {files:["./gif/self_bite.gif"]})
             } else {
-              message.channel.send("**" + user + "** bites **" + targetUser + "!** Owch.", {files:["./gif/bite_" + (Math.floor((Math.random() * 6) + 1)) + ".gif"]})
+              message.channel.send("**" + user + "** bites **" + targetUser + "!** Owch.", {files:["./gif/bite_" + (Math.floor((Math.random() * 4) + 1)) + ".gif"]})
             }
           };
 
@@ -585,12 +585,17 @@ if (message.author.username === 'Trap-Bot'){}else{
         if (command === "!lovecalc"){
           if (targetUser2 === "none"){
             message.channel.send("Please mention _two_ users!");
+          }else if(targetUser2 === targetUser){
+            message.channel.send("Please mention two _different_ users!");
           }else{
-            //GlitchTheFox and FelixTheTrap are 50% compatible!
             if (client.loveCalc.has(targetUser + targetUser2) || client.loveCalc.has(targetUser2 + targetUser)){
             var loveComp = (client.loveCalc.get(targetUser + targetUser2) || client.loveCalc.get(targetUser2 + targetUser));
-            }else{
-            var loveComp = (Math.floor((Math.random() * 100) + 1));
+          }else if ((targetUser === ownerUser && targetUser2 === 'Hit by a Parked Car') || (targetUser === 'Hit by a Parked Car' && targetUser2 === ownerUser)){
+            var loveComp = 100;
+          }else if (targetUser === ownerUser || targetUser2 === ownerUser){
+            var loveComp = 0;
+            }else {
+              var loveComp = (Math.floor((Math.random() * 100) + 1));
             }
             message.channel.send("**" + targetUser + "** and **" + targetUser2 + "** are **" + loveComp + "%** compatible! :heart:");
             client.loveCalc.set(targetUser + targetUser2, loveComp, true);
