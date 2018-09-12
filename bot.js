@@ -1,19 +1,16 @@
-var Discord = require('discord.js');
-var client = new Discord.Client();
-var fs = require('file-system');
+const Discord = require('discord.js');
+const client = new Discord.Client();
+var util = require('util');
+const fs = require("fs");
 var ownerID = process.env.ownerID
 var trapID = process.env.trapID
-var util = require('util');
+var storage = JSON.parse(fs.readFileSync("./storage.json", "utf8"));
 
-const Enmap = require('enmap');
-const EnmapLevel = require('enmap-level');
-
-const tableSource = new EnmapLevel({name: "RPchar"});
-const RPchar = new Enmap({provider: tableSource});
-client.RPchar = new Enmap({name: "RPchar", persistent: true});
+const Enmap = require("enmap");
+const EnmapLevel = require("enmap-level");
 
 const tableSource2 = new EnmapLevel({name:"loveCalc"});
-const loveCalc = new Enmap({provide: tableSource2});
+const loveCalc = new Enmap({provider: tableSource2});
 client.loveCalc = new Enmap({name: "loveCalc", persistent: true});
 
 const tableSource3 = new EnmapLevel({name: "rollLog"});
@@ -41,7 +38,8 @@ client.on('message', message => {
     var user = message.author.username;
     var userID = message.author.id;
     var trapUser = client.user.username;
-    var ownerUser = "GlitchTheFox"
+    var ownerUser = "GlitchTheFox";
+
 
 
 //identifies the arguments for commands.
@@ -74,7 +72,7 @@ console.log("<" + user + "> " + msg);
 
 //**COMMANDS START HERE.**
 //if/else command prevents Trap-Bot from executing commands it itself has written.
-if (message.author.username === 'Trap-Bot'){}else{
+if (message.author.username === 'Trap-Bot') return;
 
   if (message.channel.type === 'dm') return;
 
@@ -83,27 +81,41 @@ if (message.author.username === 'Trap-Bot'){}else{
 
 
   //RP COMMANDS
-      if (command === '!charcreate'){ //COMMAND USES ENMAPS. (Does not remember input after restart.)
-        if (chardesc === ''){
-          message.channel.send("Please specify a character name and the description!")
-        } else {
-          client.RPchar.set(charname, chardesc, true);
-          message.channel.send("Character name and description logged! Use the '!char' command to see the information!")
+  if (command === '!charcreate'){
+  if (chardesc === ''){
+    message.channel.send("Please specify a character name and the description!")
+  }else{
+    storage[message.author.id] = {
+      "characters": {
+      }
+    }
+    storage[message.author.id].characters[charname] = chardesc;
+    fs.writeFile("./storage.json", JSON.stringify(storage, null, 2), (err) => {
+      if (err) console.error(err)
+    });
+    message.channel.send("Character name and description logged! Use the '!char' command to see the information!");
+}};
 
+if (command === "!chardelete"){
+  if (charname === undefined){
+    message.channel.send("Please specify a character to delete.")
+  }else{
+    delete storage[message.author.id].characters[charname];
+    fs.writeFile("./storage.json", JSON.stringify(storage, null, 2), (err) => {
+      if (err) console.error(err)
+    });
+    message.channel.send("Character deleted!")
+  }
+}
 
-        }
-      };
-
-      if (command === '!char'){ //COMMAND USES ENMAPS. (Does not remember input after restart.)
-        let charOutput = (client.RPchar.get(charname));
-        if (charname === undefined){
-          message.channel.send("Please specify a character name!")
-        }else if (charOutput === null){
-          message.channel.send("That character doesn't exist, sorry!")
-        } else {
-          message.channel.send("**" + charname + "**: " + charOutput);
-        }
-      };
+if (command === '!char'){
+  let charOutput1 = JSON.stringify(storage[message.author.id].characters);
+  if (charOutput1.indexOf(charname) > -1){
+    message.channel.send("**" + charname + "**: " + storage[message.author.id].characters[charname]);
+  } else {
+    message.channel.send("Sorry, that character doesn't exist!")
+  }
+};
 
       if (command === '!artist'){
         message.channel.send("https://glitchthef0x.deviantart.com/?rnrd=239139")
@@ -133,8 +145,8 @@ if (message.author.username === 'Trap-Bot'){}else{
       };
 
   //A dice roll command. !roll 20 2
-  	if (command === '!roll') {
-
+    if (command === '!roll') {
+      if (firstArg = undefined) return;
       //SETTING UP VARIATIONS FOR DICEROLL/AMOUNT/MODIFIER.
       if (firstArg.indexOf('d') > -1){ //If the user has formatted roll as e.g. 1d20, do this.
         if(firstArg.indexOf('+') > -1){ //If the user has added e.g. 1d20+3, do this.
@@ -160,7 +172,9 @@ if (message.author.username === 'Trap-Bot'){}else{
       if (isNaN(firstArg) || firstArg < 1 || firstArg > 1000) { //If the user inputs an invalid roll, fuck them up.
         message.channel.send('Sorry, that\'s not a number!')
       }else if (secondArg === undefined){ //If the user isn't rolling more than one dice and has just inputted !roll 20, output this.
-        message.channel.send('**' + user + '** rolled a **' + (Math.floor((Math.random() * firstArg) + 1)) + '**' + ' out of **' + firstArg + '**!');
+        let rollAmount = (Math.floor((Math.random() * firstArg) + 1));
+        message.channel.send('**' + user + '** rolled a **' + rollAmount + '**' + ' out of **' + firstArg + '**!');
+        client.rollLog.set(user, rollAmount, true);
       }else if (secondArg > 10){ //If the user tries to roll more than 10 dice, output this.
         message.channel.send("Sorry, that's too many dice!")
       }else if (secondArg >= 1){ //Ohhhh fuck. If the user does specify an amount of dice to roll, output this.
@@ -168,9 +182,11 @@ if (message.author.username === 'Trap-Bot'){}else{
           let rolling1 = ('**' + user + '** rolled a **'); //Setting up string, in order to repeat the correct amount of times.
           let rolling2 = ("** out of **" + firstArg + "**!");
           let rollAmount = 0
+          let rollLogged
 
         for (var i = 0; i < secondArg; i++){ //for loop which rolls the desired amount of dice, and adds on the correct string.
           let rolling = (Math.floor((Math.random() * firstArg) + 1))
+
           rollAmount += rolling; //Adds result onto final sum.
           if (i < (secondArg - 1)){
             rolling += ("**,** ")
@@ -421,39 +437,37 @@ if (message.author.username === 'Trap-Bot'){}else{
 
 
 
-  //Sets up mention-based commands.
-        if(message.channel.type === 'dm'){}
-        else if ((message.mentions.members.first()) === undefined){
-          if (command === "!pat" || command === "!stab" || command === "!thumbsup" || command === "!kiss" || command === "!pester" || command === "!slap" || command === "!smite" || command === "!hug" || command === "!sex" || command === "!lovecalc" || command === "!bite"){
-            message.channel.send("Please mention somebody, first!")
-          };
-        }else{
-          //Setting up username for the targetted user.
-          if (firstArg.indexOf("@", "<", ">", /\d/g || "!") > -1){
-          let mention1 = ((util.inspect(firstArg)).split("'"))[1];
-          let targetID = (mention1.replace(/<|@|>|!/g, ''));
-          var targetUser = (client.users.get(targetID).username);
-          console.log("~~ " + targetUser);
+        //Sets up mention-based commands.
+              if ((message.mentions.members.first()) === undefined){
+                if (command === "!pat" || command === "!stab" || command === "!thumbsup" || command === "!kiss" || command === "!pester" || command === "!slap" || command === "!smite" || command === "!hug" || command === "!sex" || command === "!lovecalc" || command === "!bite"){
+                  message.channel.send("Please mention somebody, first!") //prevents username set-up problem that is caused by not mentioning a user.
+                };
+              }else{
+                //Setting up username for the targetted user.
+                if (firstArg.indexOf("@", "<", ">", /\d/g || "!") > -1){ //If this really is a mention... mention is read as <!@123456789123456789>
+                let mention1 = ((util.inspect(firstArg)).split("'"))[1]; //selects the mention specifically
+                let targetID = (mention1.replace(/<|@|>|!/g, '')); //removes excess from the mention to get the plain ID string.
+                var targetUser = (client.users.get(targetID).username); //retrieves the username using the ID from the mention.
+                console.log("~~ " + targetUser); //logs first user for debugging
 
-          if (secondArg === undefined){
-            var targetUser2 = "none";
-          }else{
-          let mention2 = (util.inspect(secondArg).split("'"))[1];
-          let targetID2 = (mention2.replace(/<|@|>|!/g, ''));
-          if ((client.users.get(targetID2)) === undefined){
-            var targetUser2 = "none";
-          }else{
-            var targetUser2 = (client.users.get(targetID2).username);
-          }};
-          console.log(targetUser2);
-        } else{
-
-          let member = message.mentions.members.first()
-          var targetUser = (member.user.username);
-          console.log(targetUser);
-          var targetUser2 = "none";
-          console.log(targetUser2);
-        };
+                if (secondArg === undefined){ //set to a string to prevent problem caused by calling on an undefined variable.
+                  var targetUser2 = "none"; //if a second user is not defined, set it to the string 'none' to be used in command lines where second user is necessary.
+                }else{
+                let mention2 = (util.inspect(secondArg).split("'"))[1];
+                let targetID2 = (mention2.replace(/<|@|>|!/g, ''));
+                if ((client.users.get(targetID2)) === undefined){
+                  var targetUser2 = "none";
+                }else{
+                  var targetUser2 = (client.users.get(targetID2).username);
+                }};
+                console.log(targetUser2); //logs second user for debugging
+              } else{
+                let member = message.mentions.members.first()
+                var targetUser = (member.user.username);
+                console.log(targetUser);
+                var targetUser2 = "none";
+                console.log(targetUser2);
+              };
 
 
 
@@ -597,7 +611,12 @@ if (message.author.username === 'Trap-Bot'){}else{
             }else {
               var loveComp = (Math.floor((Math.random() * 100) + 1));
             }
-            message.channel.send("**" + targetUser + "** and **" + targetUser2 + "** are **" + loveComp + "%** compatible! :heart:");
+            if (loveComp > 50){
+              var heart = ":heart:";
+            }else{
+              var heart = ":broken_heart:"
+            }
+            message.channel.send("**" + targetUser + "** and **" + targetUser2 + "** are **" + loveComp + "%** compatible! " + heart);
             client.loveCalc.set(targetUser + targetUser2, loveComp, true);
             console.log(client.loveCalc.get(targetUser + targetUser2));
           }
@@ -605,4 +624,4 @@ if (message.author.username === 'Trap-Bot'){}else{
         };
   };
 
-  }});
+  });
