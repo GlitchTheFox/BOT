@@ -146,7 +146,9 @@ if (command === '!char'){
 
       //A dice roll command. !roll 20 2
       	if (command === '!roll') {
-          if (firstArg = undefined) {} else if (firstArg.indexOf('d') > -1){ //If the user has formatted roll as e.g. 1d20, do this.
+          if (firstArg = undefined) {
+            message.channel.send("Please define a dice amount, dice type, and dice modifier!")
+          } else if (firstArg.indexOf('d') > -1){ //If the user has formatted roll as e.g. 1d20, do this.
             if(firstArg.indexOf('+') > -1){ //If the user has added e.g. 1d20+3, do this.
               let x = firstArg.split('+');
               thirdArg = x[1];
