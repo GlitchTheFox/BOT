@@ -144,29 +144,27 @@ if (command === '!char'){
           message.channel.send('**' + user + '** thinks traps aren\'t gay!', {files: ["./gif/lol.gif"]});
       };
 
-  //A dice roll command. !roll 20 2
-    if (command === '!roll') {
-      if (firstArg = undefined) return;
-      //SETTING UP VARIATIONS FOR DICEROLL/AMOUNT/MODIFIER.
-      if (firstArg.indexOf('d') > -1){ //If the user has formatted roll as e.g. 1d20, do this.
-        if(firstArg.indexOf('+') > -1){ //If the user has added e.g. 1d20+3, do this.
-          let x = firstArg.split('+');
-          thirdArg = x[1];
-        }else{thirdArg = secondArg}; //If the user has added e.g. 1d20 3, make the modifier into the second argument.
-        let i = firstArg.split('d');
-        firstArg = i[1];
-        secondArg = i[0];
-        firstArg = parseInt(firstArg); //Make sure the arguments are integers, not strings.
-        secondArg = parseInt(secondArg);
-        thirdArg = parseInt(thirdArg);
-      }else if (firstArg.indexOf('+') > -1){ //If the user has added e.g. 20+3, do this.
-          let x = firstArg.split('+');
-          thirdArg = x[1];
-          secondArg = 1; //Setting the second argument to 1 because it was not specified.
-          firstArg = x[0];
-          firstArg = parseInt(firstArg);
-          thirdArg = parseInt(thirdArg);
-      };
+      //A dice roll command. !roll 20 2
+      	if (command === '!roll') {
+          if (firstArg = undefined) {} else if (firstArg.indexOf('d') > -1){ //If the user has formatted roll as e.g. 1d20, do this.
+            if(firstArg.indexOf('+') > -1){ //If the user has added e.g. 1d20+3, do this.
+              let x = firstArg.split('+');
+              thirdArg = x[1];
+            }else{thirdArg = secondArg}; //If the user has added e.g. 1d20 3, make the modifier into the second argument.
+            let i = firstArg.split('d');
+            firstArg = i[1];
+            secondArg = i[0];
+            firstArg = parseInt(firstArg); //Make sure the arguments are integers, not strings.
+            secondArg = parseInt(secondArg);
+            thirdArg = parseInt(thirdArg);
+          }else if (firstArg.indexOf('+') > -1){ //If the user has added e.g. 20+3, do this.
+              let x = firstArg.split('+');
+              thirdArg = x[1];
+              secondArg = 1; //Setting the second argument to 1 because it was not specified.
+              firstArg = x[0];
+              firstArg = parseInt(firstArg);
+              thirdArg = parseInt(thirdArg);
+          };
 
 
       if (isNaN(firstArg) || firstArg < 1 || firstArg > 1000) { //If the user inputs an invalid roll, fuck them up.
