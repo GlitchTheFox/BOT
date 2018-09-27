@@ -435,7 +435,7 @@ if (command === '!char'){
 
         //Sets up mention-based commands.
               if ((message.mentions.members.first()) === undefined){
-                if (command === "!pat" || command === "!stab" || command === "!thumbsup" || command === "!kiss" || command === "!pester" || command === "!slap" || command === "!smite" || command === "!hug" || command === "!sex" || command === "!lovecalc" || command === "!bite"){
+                if (command === "!pat" || command === "!stab" || command === "!thumbsup" || command === "!kiss" || command === "!pester" || command === "!slap" || command === "!smite" || command === "!hug" || command === "!sex" || command === "!lovecalc" || command === "!bite" || command === "!avatar"){
                   message.channel.send("Please mention somebody, first!") //prevents username set-up problem that is caused by not mentioning a user.
                 };
               }else{
