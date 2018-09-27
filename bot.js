@@ -145,10 +145,10 @@ if (command === '!char'){
       };
 
       //A dice roll command. !roll 20 2
-      	if (command === '!roll') {
-          if (firstArg = undefined) {
-            message.channel.send("Please define a dice amount, dice type, and dice modifier!")
-          } else if (firstArg.indexOf('d') > -1){ //If the user has formatted roll as e.g. 1d20, do this.
+      if (command === '!roll') {
+        if (firstArg === undefined) {
+          message.channel.send("Please specify a number!")
+        }else if (firstArg.indexOf('d') > -1){ //If the user has formatted roll as e.g. 1d20, do this.
             if(firstArg.indexOf('+') > -1){ //If the user has added e.g. 1d20+3, do this.
               let x = firstArg.split('+');
               thirdArg = x[1];
@@ -397,10 +397,6 @@ if (command === '!char'){
             message.channel.send(embed);
         };
 
-  //Pastes the URL of the user's avatar.
-        if (command === '!avatar'){
-          message.channel.send(message.author.avatarURL);
-        };
 
         if (command === '!servericon'){
           message.channel.send(message.guild.iconURL);
@@ -471,6 +467,16 @@ if (command === '!char'){
 
 
 
+              if (command === '!avatar'){
+                //message.channel.send(message.author.avatarURL); < --- The original command.
+                if (targetUser === user){
+                  message.channel.send("Here is **" + user + "'s** avatar!\n" + (message.author.avatarURL));
+                } else {
+                  client.fetchUser(targetID).then(myUser => {
+                    message.channel.send("Here is **" + targetUser + "'s** avatar!\n" + (myUser.avatarURL));
+                  });
+                }
+              };
 
           //Actual emote commands.
           if (command === "!pat"){
