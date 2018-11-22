@@ -435,6 +435,11 @@ if (command === '!char'){
             message.channel.send("Goodnight, sir!")
           }
         };
+  
+//Here's some non-mention avatar for ya.
+      if (msg === "!avatar"){
+        message.channel.send("Here is **" + user + "'s** avatar!\n" + (message.author.avatarURL));
+      };
 
 
 
