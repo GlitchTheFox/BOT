@@ -314,15 +314,20 @@ if (command === '!char'){
 
 
 
-  //A coin flip command.
-    if (command === '!coinflip') {
-      let coin = (Math.floor((Math.random() * 2) + 1));
-      if (coin === 1){
-        message.channel.send('**' + user + '** flipped a coin and got **Heads!**')
-      } else {
-        message.channel.send('**' + user + '** flipped a coin and got **Tails!**')
+    //A coin flip command.
+      if (command === '!coinflip') {
+        let base = (Math.floor((Math.random() * 1000) + 1));
+        if (base === 1){
+          message.channel.send("Alright! Flipping... Uh... **" + user + "** flipped a coin and got... It landed on its side, what do I say?")
+        } else{
+        let coin = (Math.floor((Math.random() * 2) + 1));
+        if (coin === 1){
+          message.channel.send('**' + user + '** flipped a coin and got **Heads!**')
+        } else {
+          message.channel.send('**' + user + '** flipped a coin and got **Tails!**')
+        }
       }
-    };
+      };
 
 
 
@@ -435,16 +440,16 @@ if (command === '!char'){
 
         //Sets up mention-based commands.
               if ((message.mentions.members.first()) === undefined){
-                if (command === "!pat" || command === "!stab" || command === "!thumbsup" || command === "!kiss" || command === "!pester" || command === "!slap" || command === "!smite" || command === "!hug" || command === "!sex" || command === "!lovecalc" || command === "!bite" || command === "!avatar"){
+                if (command === "!pat" || command === "!stab" || command === "!thumbsup" || command === "!kiss" || command === "!pester" || command === "!slap" || command === "!smite" || command === "!hug" || command === "!sex" || command === "!lovecalc" || command === "!bite"){
                   message.channel.send("Please mention somebody, first!") //prevents username set-up problem that is caused by not mentioning a user.
                 };
               }else{
                 //Setting up username for the targetted user.
                 if (firstArg.indexOf("@", "<", ">", /\d/g || "!") > -1){ //If this really is a mention... mention is read as <!@123456789123456789>
                 let mention1 = ((util.inspect(firstArg)).split("'"))[1]; //selects the mention specifically
-                let targetID = (mention1.replace(/<|@|>|!/g, '')); //removes excess from the mention to get the plain ID string.
+                var targetID = (mention1.replace(/<|@|>|!/g, '')); //removes excess from the mention to get the plain ID string.
                 var targetUser = (client.users.get(targetID).username); //retrieves the username using the ID from the mention.
-                console.log("~~ " + targetUser); //logs first user for debugging
+                //console.log("~~ " + targetUser); //logs first user for debugging
 
                 if (secondArg === undefined){ //set to a string to prevent problem caused by calling on an undefined variable.
                   var targetUser2 = "none"; //if a second user is not defined, set it to the string 'none' to be used in command lines where second user is necessary.
@@ -456,27 +461,26 @@ if (command === '!char'){
                 }else{
                   var targetUser2 = (client.users.get(targetID2).username);
                 }};
-                console.log(targetUser2); //logs second user for debugging
+                //console.log(targetUser2); logs second user for debugging
               } else{
                 let member = message.mentions.members.first()
                 var targetUser = (member.user.username);
-                console.log(targetUser);
+                //console.log(targetUser);
                 var targetUser2 = "none";
-                console.log(targetUser2);
+                //console.log(targetUser2);
               };
 
 
-
-              if (command === '!avatar'){
-                //message.channel.send(message.author.avatarURL); < --- The original command.
-                if (targetUser === user){
-                  message.channel.send("Here is **" + user + "'s** avatar!\n" + (message.author.avatarURL));
-                } else {
-                  client.fetchUser(targetID).then(myUser => {
-                    message.channel.send("Here is **" + targetUser + "'s** avatar!\n" + (myUser.avatarURL));
-                  });
-                }
-              };
+                if (command === '!avatar'){
+                  //message.channel.send(message.author.avatarURL); < --- The original command.
+                  if (targetUser === user){
+                    message.channel.send("Here is **" + user + "'s** avatar!\n" + (message.author.avatarURL));
+                  } else {
+                    client.fetchUser(targetID).then(myUser => {
+                      message.channel.send("Here is **" + targetUser + "'s** avatar!\n" + (myUser.avatarURL));
+                    });
+                  }
+                };
 
           //Actual emote commands.
           if (command === "!pat"){
