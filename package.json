@@ -4,6 +4,9 @@
   "description": "Traps are gay",
   "main": "bot.js",
   "author": "GlitchTheFox",
+  "engines": {
+    "node": "8.9.4"
+  },
   "dependencies": {
     "discord.io": "github:woor/discord.io#gateway_v6",
     "discord.js": "^11.3.2",
