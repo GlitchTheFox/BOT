@@ -16,6 +16,10 @@ client.loveCalc = new Enmap({name: "loveCalc", persistent: true});
 const tableSource3 = new EnmapLevel({name: "rollLog"});
 const rollLog = new Enmap({provider: tableSource3});
 client.rollLog = new Enmap({name: "rollLog", persistent: true});
+
+const tableSource4 = new EnmapLevel({name: "votePoll"});
+const votePoll = new Enmap({provider: tableSource4});
+client.votePoll = new Enmap({name: "votePoll", persistent: true});
 //Set-up.
 
 
@@ -29,6 +33,26 @@ client.on('ready', () => {
   client.user.setActivity('with traps');
   console.log(`${client.user.username} shall proceed...`);
 });
+
+
+client.on("guildMemberRemove", (member) => {
+  //member.user.id
+  timeRemoved = new Date();
+  guildOwner = member.guild.owner;
+  removedMember = member.user.username;
+  if (!storage.hasOwnProperty(member.user.id)){
+    console.log("[User ID not found, writing...]");
+    storage[member.user.id] = {
+      "removed": {
+      }
+    }
+  }
+  storage[member.user.id].removed = timeRemoved
+  fs.writeFile("./storage.json", JSON.stringify(storage, null, 2), (err) => {
+    if (err) console.error(err)
+  });
+  guildOwner.send("**" + removedMember + "** has left at **" + timeRemoved + "!**");
+})
 
 
 //Bot begins reading messages. **PLACE THINGS THAT NEED TO BE CONSTANT ABOVE THIS.
@@ -221,7 +245,51 @@ if (command === '!char'){
       }
 
 
+      //VOTE COMMANDS
+        if (command === "!newpoll"){
+          client.votePoll.set(firstArg, 0, true);
+          message.channel.send("New poll called **" + firstArg + "** started by **" + user + "!**");
+          console.log(client.votePoll.get(user))
+        }
 
+        if (command === "!votepoll"){
+          if (!client.votePoll.has(firstArg)){
+            message.channel.send("Sorry, that poll doesn't exist!")
+          } else if (client.votePoll.get(firstArg) === "closed"){
+            message.channel.send("Sorry! That poll has been closed!")
+          } else {
+            voteAmount = client.votePoll.get(firstArg)
+
+            voteAmount = (voteAmount + 1)
+            client.votePoll.set(firstArg, voteAmount)
+            message.channel.send("**" + user + "** voted for **" + firstArg + "!**")
+            console.log(client.votePoll.get(firstArg));
+          }
+        }
+
+        if (command === "!checkpoll"){
+          if (!client.votePoll.has(firstArg)){
+            message.channel.send("Sorry, that poll doesn't exist!")
+          } else if (client.votePoll.get(firstArg) === "closed"){
+            message.channel.send("Sorry! That poll has been closed!")
+          } else {
+            voteAmount = client.votePoll.get(firstArg);
+            message.channel.send("**" + firstArg + "** has **" + voteAmount + "** vote/s!")
+          }
+        }
+
+        if (command === "!closepoll"){
+          if (!client.votePoll.has(firstArg)){
+            message.channel.send("Sorry, that poll doesn't exist!")
+          }else if (client.votePoll.get(firstArg) === "closed"){
+            message.channel.send("Sorry! That poll has been closed!")
+          } else{
+          voteAmount = client.votePoll.get(firstArg);
+          console.log(voteAmount);
+          message.channel.send("**" + firstArg + "** closed with **" + voteAmount + "** vote/s!");
+          client.votePoll.set(firstArg, "closed")
+        }
+      };
 
   //MATH COMMANDS
 
@@ -332,13 +400,12 @@ if (command === '!char'){
 
 
 
-  //Sends the author the command list.
-    if (command === '!help'){
+      //Sends the author the command list.
+        if (command === '!help'){
+          message.author.send("```\nCOMMAND LIST \n\nGeneral Commands:\n\n\t!trap \n\t\tYou believe in harsh truths.\n\t!not \n\t\tLook at you! Little rebel! \n\t!whoami \n\t\tPrints your user information. \n\t!serverinfo \n\t\tDisplays the server's information. \n\t!servericon \n\t\tSends URL of the server's icon. \n\t!echo \n\t\tEchoes a phase sent by the user. Format: !echo <text>\n\t!ping\n\t\tSends the delay in ms.\n\t!help\n\t\tYou are here.\n\t!avatar\n\t\tSends you back your avatar.\n\t!uptime\n\t\tDisplays the amount of time the bot has been up for. \n\t!artist\n\t\tPlease commission me bby.\n\nRP Commands:\n\n\t!charcreate\n\t\tCreates a character! Format: !charcreate <character name> <character description> Warning: Characters are deleted upon bot restart. \n\t\tCheck the time with !uptime. \n\t!char\n\t\tReturns character information. Format: !char <character name>\n\t!roll\n\t\tRolls a dice! Examples: !roll 1d20+3 !roll 20 1 3```");
+          message.author.send("```Math Commands:\n\n\t!coinflip\n\t\tFlips a coin.\n\t!add\n\t\tAdds two numbers together. Format: !add <n1> <n2>\n\t!subtract\n\t\tSubtracts a number from the other. Refer to !add for formatting for these commands.\n\t!multiply\n\t\tTimes two numbers together.\n\t!divide\n\t\tDivides two numbers.\n\nEmotes:\n\n\t!pat\n\t\tPat someone, adorably!\n\t!stab\n\t\tKill your friends.\n\t!kiss\n\t\tKiss your friends.\n\t!thumbsup\n\t\tA p p r o v e.\n\t!pester\n\t\tGet your friend's attention.\n\t!cry\n\t\tBurst into tears.\n\t!tail\n\t\tWag your tail. Furry.\n\t!slap\n\t\tSlap your friends.\n\t!hug\n\t\tHug your friends!\n\t!sex\n\t\tSex your friends. ( ͡° ͜ʖ ͡°)\n\t!bite\n\t\tBite your friends.\n\t!oral\n\t\t succ\n\t!lovecalc\n\t\tCalculate your compatibility. Format: !lovecalc <user1> <user2>\n\t!newpoll\n\t\tCreate a poll! Format: !newpoll <name>\n\t!votepoll\n\t\tVote for a poll!\n\t!checkpoll\n\t\tCheck a poll's number of votes!\n\t!closepoll\n\t\tClose a poll for good and show how many have voted for it!```");
 
-      message.author.send("```\nCOMMAND LIST \n\nGeneral Commands:\n\n\t!trap \n\t\tYou believe in harsh truths.\n\t!not \n\t\tLook at you! Little rebel! \n\t!whoami \n\t\tPrints your user information. \n\t!serverinfo \n\t\tDisplays the server's information. \n\t!servericon \n\t\tSends URL of the server's icon. \n\t!echo \n\t\tEchoes a phase sent by the user. Format: !echo <text>\n\t!ping\n\t\tSends the delay in ms.\n\t!help\n\t\tYou are here.\n\t!avatar\n\t\tSends you back your avatar.\n\t!uptime\n\t\tDisplays the amount of time the bot has been up for. \n\t!artist\n\t\tPlease commission me bby.\n\nRP Commands:\n\n\t!charcreate\n\t\tCreates a character! Format: !charcreate <character name> <character description> Warning: Characters are deleted upon bot restart. \n\t\tCheck the time with !uptime. \n\t!char\n\t\tReturns character information. Format: !char <character name>\n\t!roll\n\t\tRolls a dice! Examples: !roll 1d20+3 !roll 20 1 3```");
-      message.author.send("```Math Commands:\n\n\t!coinflip\n\t\tFlips a coin.\n\t!add\n\t\tAdds two numbers together. Format: !add <n1> <n2>\n\t!subtract\n\t\tSubtracts a number from the other. Refer to !add for formatting for these commands.\n\t!multiply\n\t\tTimes two numbers together.\n\t!divide\n\t\tDivides two numbers.\n\nEmotes:\n\n\t!pat\n\t\tPat someone, adorably!\n\t!stab\n\t\tKill your friends.\n\t!kiss\n\t\tKiss your friends.\n\t!thumbsup\n\t\tA p p r o v e.\n\t!pester\n\t\tGet your friend's attention.\n\t!cry\n\t\tBurst into tears.\n\t!tail\n\t\tWag your tail. Furry.\n\t!slap\n\t\tSlap your friends.\n\t!hug\n\t\tHug your friends!\n\t!sex\n\t\tSex your friends. ( ͡° ͜ʖ ͡°)\n\t!bite\n\t\tBite your friends.\n\t!lovecalc\n\t\tCalculate your compatibility. Format: !lovecalc <user1> <user2>\n\n\nNew commands always being added :) Enjoy!```");
-
-    };
+        };
 
 
 
@@ -445,7 +512,7 @@ if (command === '!char'){
                 };
               }else{
                 //Setting up username for the targetted user.
-                if (firstArg.indexOf("@", "<", ">", /\d/g || "!") > -1){ //If this really is a mention... mention is read as <!@123456789123456789>
+                if (firstArg === undefined){return}else if (firstArg.indexOf("@", "<", ">", /\d/g || "!") > -1){ //If this really is a mention... mention is read as <!@123456789123456789>
                 let mention1 = ((util.inspect(firstArg)).split("'"))[1]; //selects the mention specifically
                 var targetID = (mention1.replace(/<|@|>|!/g, '')); //removes excess from the mention to get the plain ID string.
                 var targetUser = (client.users.get(targetID).username); //retrieves the username using the ID from the mention.
@@ -592,6 +659,18 @@ if (command === '!char'){
               message.channel.send("**" + user + "** bites themself!", {files:["./gif/self_bite.gif"]})
             } else {
               message.channel.send("**" + user + "** bites **" + targetUser + "!** Owch.", {files:["./gif/bite_" + (Math.floor((Math.random() * 4) + 1)) + ".gif"]})
+            }
+          };
+
+          if (command === "!oral"){
+            if(targetUser === trapUser){
+              message.channel.send("Suck my trap-dick, d-daddy~ uwu", {files:["./gif/oral_" + (Math.floor((Math.random() * 5) + 1)) + ".gif"]})
+            } else if (targetUser === user){
+              message.channel.send("We're all judging you.")
+            } else if (targetUser === ownerUser){
+              message.channel.send("How dare you try to do that to my creator?!", {files:["./gif/slap_6.gif"]})
+            } else {
+              message.channel.send("**" + user + "** sucks **" + targetUser + "'s** dick!", {files:["./gif/oral_" + (Math.floor((Math.random() * 5) + 1)) + ".gif"]})
             }
           };
 
