@@ -63,6 +63,7 @@ client.on('message', message => {
     var userID = message.author.id;
     var trapUser = client.user.username;
     var ownerUser = "GlitchTheFox";
+    var chibiUser = "chibi wee wee";
 
 
 
@@ -502,7 +503,7 @@ if (command === '!char'){
             message.channel.send("Goodnight, sir!")
           }
         };
-  
+
 //Here's some non-mention avatar for ya.
       if (msg === "!avatar"){
         message.channel.send("Here is **" + user + "'s** avatar!\n" + (message.author.avatarURL));
@@ -626,7 +627,7 @@ if (command === '!char'){
           };
 
           if (command === "!smite"){
-            if(message.author.id === ownerID){
+            if(message.author.id === ownerID || user === chibiUser){
               if(targetUser === trapUser){
                 message.channel.send("MERCY! *Dies.*", {files:["./gif/smite_" + (Math.floor((Math.random() * 3) + 1)) + ".gif"]})
               } else {
