@@ -15,7 +15,7 @@
     "enmap-level": "^2.0.2",
     "enmap-rethink": "^2.0.1",
     "file-system": "^2.2.2",
-    "npm": "^6.4.1",
+    "npm": "^6.13.4",
     "winston": "^2.4.1"
   }
 }
