@@ -158,17 +158,6 @@ if (command === '!char'){
         }
       }
 
-
-  //traps are gay command.
-      if (command === '!trap') {
-          message.channel.send('**' + user + '** thinks traps are gay!', {files: ["./gif/trap_1.gif"]});
-      };
-
-  //traps aren't gay command.
-      if (command === '!not') {
-          message.channel.send('**' + user + '** thinks traps aren\'t gay!', {files: ["./gif/lol.gif"]});
-      };
-
       //A dice roll command. !roll 20 2
       if (command === '!roll') {
         if (firstArg === undefined) {
@@ -403,7 +392,7 @@ if (command === '!char'){
 
       //Sends the author the command list.
         if (command === '!help'){
-          message.author.send("```\nCOMMAND LIST \n\nGeneral Commands:\n\n\t!trap \n\t\tYou believe in harsh truths.\n\t!not \n\t\tLook at you! Little rebel! \n\t!whoami \n\t\tPrints your user information. \n\t!serverinfo \n\t\tDisplays the server's information. \n\t!servericon \n\t\tSends URL of the server's icon. \n\t!echo \n\t\tEchoes a phase sent by the user. Format: !echo <text>\n\t!ping\n\t\tSends the delay in ms.\n\t!help\n\t\tYou are here.\n\t!avatar\n\t\tSends you back your avatar.\n\t!uptime\n\t\tDisplays the amount of time the bot has been up for. \n\t!artist\n\t\tPlease commission me bby.\n\nRP Commands:\n\n\t!charcreate\n\t\tCreates a character! Format: !charcreate <character name> <character description> Warning: Characters are deleted upon bot restart. \n\t\tCheck the time with !uptime. \n\t!char\n\t\tReturns character information. Format: !char <character name>\n\t!roll\n\t\tRolls a dice! Examples: !roll 1d20+3 !roll 20 1 3```");
+          message.author.send("```\nCOMMAND LIST \n\nGeneral Commands:\n\n\t!whoami \n\t\tPrints your user information. \n\t!serverinfo \n\t\tDisplays the server's information. \n\t!servericon \n\t\tSends URL of the server's icon. \n\t!echo \n\t\tEchoes a phase sent by the user. Format: !echo <text>\n\t!ping\n\t\tSends the delay in ms.\n\t!help\n\t\tYou are here.\n\t!avatar\n\t\tSends you back your avatar.\n\t!uptime\n\t\tDisplays the amount of time the bot has been up for. \n\t!artist\n\t\tPlease commission me bby.\n\nRP Commands:\n\n\t!charcreate\n\t\tCreates a character! Format: !charcreate <character name> <character description> Warning: Characters are deleted upon bot restart. \n\t\tCheck the time with !uptime. \n\t!char\n\t\tReturns character information. Format: !char <character name>\n\t!roll\n\t\tRolls a dice! Examples: !roll 1d20+3 !roll 20 1 3```");
           message.author.send("```Math Commands:\n\n\t!coinflip\n\t\tFlips a coin.\n\t!add\n\t\tAdds two numbers together. Format: !add <n1> <n2>\n\t!subtract\n\t\tSubtracts a number from the other. Refer to !add for formatting for these commands.\n\t!multiply\n\t\tTimes two numbers together.\n\t!divide\n\t\tDivides two numbers.\n\nEmotes:\n\n\t!pat\n\t\tPat someone, adorably!\n\t!stab\n\t\tKill your friends.\n\t!kiss\n\t\tKiss your friends.\n\t!thumbsup\n\t\tA p p r o v e.\n\t!pester\n\t\tGet your friend's attention.\n\t!cry\n\t\tBurst into tears.\n\t!tail\n\t\tWag your tail. Furry.\n\t!slap\n\t\tSlap your friends.\n\t!hug\n\t\tHug your friends!\n\t!sex\n\t\tSex your friends. ( ͡° ͜ʖ ͡°)\n\t!bite\n\t\tBite your friends.\n\t!oral\n\t\t succ\n\t!lovecalc\n\t\tCalculate your compatibility. Format: !lovecalc <user1> <user2>\n\t!newpoll\n\t\tCreate a poll! Format: !newpoll <name>\n\t!votepoll\n\t\tVote for a poll!\n\t!checkpoll\n\t\tCheck a poll's number of votes!\n\t!closepoll\n\t\tClose a poll for good and show how many have voted for it!```");
 
         };
@@ -631,7 +620,7 @@ if (command === '!char'){
               if(targetUser === trapUser){
                 message.channel.send("MERCY! *Dies.*", {files:["./gif/smite_" + (Math.floor((Math.random() * 3) + 1)) + ".gif"]})
               } else {
-                message.channel.send("**" + ownerUser + "** strikes **" + targetUser + "** down with lightning!", {files:["./gif/smite_" + (Math.floor((Math.random() * 3) + 1)) + ".gif"]})
+                message.channel.send("**" + user + "** strikes **" + targetUser + "** down with lightning!", {files:["./gif/smite_" + (Math.floor((Math.random() * 3) + 1)) + ".gif"]})
               }
             }
           };
