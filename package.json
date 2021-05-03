@@ -5,7 +5,7 @@
   "main": "bot.js",
   "author": "GlitchTheFox",
   "engines": {
-    "node": "^14.16.1"
+    "node": "14.16.1"
   },
   "dependencies": {
     "discord.io": "github:woor/discord.io#gateway_v6",
