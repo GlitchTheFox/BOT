@@ -616,7 +616,7 @@ if (command === '!char'){
           };
 
           if (command === "!smite"){
-            if(message.author.id === ownerID || user === chibiUser){
+            if(message.author.id === ownerID){
               if(targetUser === trapUser){
                 message.channel.send("MERCY! *Dies.*", {files:["./gif/smite_" + (Math.floor((Math.random() * 3) + 1)) + ".gif"]})
               } else {
@@ -690,9 +690,7 @@ if (command === '!char'){
             var loveComp = (client.loveCalc.get(targetUser + targetUser2) || client.loveCalc.get(targetUser2 + targetUser));
           }else if ((targetUser === ownerUser && targetUser2 === 'Hit by a Parked Car') || (targetUser === 'Hit by a Parked Car' && targetUser2 === ownerUser)){
             var loveComp = 100;
-          }else if (targetUser === ownerUser || targetUser2 === ownerUser){
-            var loveComp = 0;
-            }else {
+          }else {
               var loveComp = (Math.floor((Math.random() * 100) + 1));
             }
             if (loveComp > 50){
